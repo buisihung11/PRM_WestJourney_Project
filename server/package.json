@@ -10,11 +10,13 @@
   "author": "HungHCC",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.23.3",
     "mssql": "^6.2.0",
-    "sequelize": "^6.2.4"
+    "sequelize": "5.22.3",
+    "tedious": "^8.3.0"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
