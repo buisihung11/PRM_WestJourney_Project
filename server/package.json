@@ -15,7 +15,7 @@
     "express": "^4.17.1",
     "helmet": "^3.23.3",
     "mssql": "^6.2.0",
-    "sequelize": "5.22.3",
+    "sequelize": "^5.22.3",
     "tedious": "^8.3.0"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "^6.1.0"
   }
 }

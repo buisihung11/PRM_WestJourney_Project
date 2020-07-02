@@ -6,26 +6,9 @@ const Actor = sequelize.define(
   'Actor',
   {
     // attributes
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    phone: DataTypes.STRING,
+
     description: DataTypes.STRING,
     imageURL: DataTypes.STRING,
-    gender: {
-      type: DataTypes.STRING,
-      validate: {
-        isIn: {
-          args: [['male', 'female', 'others']],
-          msg: 'Gender must be one of male, female or others',
-        },
-      },
-    },
   },
   { freezeTableName: true },
 );
@@ -93,6 +76,20 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    gender: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: {
+          args: [['male', 'female', 'others']],
+          msg: 'Gender must be one of male, female or others',
+        },
+      },
+    },
+    phone: DataTypes.STRING,
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -110,7 +107,10 @@ const User = sequelize.define(
       },
     },
   },
-  { freezeTableName: true },
+  {
+    freezeTableName: true,
+    indexes: [{ unique: true, fields: ['username'] }],
+  },
 );
 
 const ActorCharactor = sequelize.define(
@@ -127,21 +127,29 @@ const ScenceEquipment = sequelize.define(
 const configModel = async () => {
   Scence.belongsToMany(Equipment, { through: ScenceEquipment });
   Equipment.belongsToMany(Scence, { through: ScenceEquipment });
+
   User.hasOne(Actor);
+  Actor.belongsTo(User);
+
   User.hasMany(Token);
+  Token.belongsTo(User);
+
   Scence.hasMany(Character);
+  Character.belongsTo(Scence);
 
   Actor.belongsToMany(Character, { through: ActorCharactor });
   Character.belongsToMany(Actor, { through: ActorCharactor });
 
-  await User.sync();
-  await Scence.sync();
-  await Actor.sync();
-  await Character.sync();
-  await Equipment.sync();
-  await Token.sync();
-  await ActorCharactor.sync();
-  await ScenceEquipment.sync();
+  await sequelize.sync();
+
+  // await User.sync({ force: true });
+  // await Scence.sync({ force: true });
+  // await Actor.sync({ force: true });
+  // await Character.sync({ force: true });
+  // await Equipment.sync({ force: true });
+  // await Token.sync({ force: true });
+  // await ActorCharactor.sync({ force: true });
+  // await ScenceEquipment.sync({ force: true });
 };
 
 module.exports = {

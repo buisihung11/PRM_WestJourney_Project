@@ -7,8 +7,8 @@
 
 ## Actor
 
-1. [ ] GET /me/scenes (?filter= ["done","not-yet","default"])
-2. [ ] GET /me/scenes/:id
+1. [x] GET /me/scenes (?filter= ["done","not-yet","default"])
+2. [x] GET /me/scenes/:id
 3. [ ] GET /me/scenes/:id/characters
 4. [ ] GET /me/scenes/:id/characters/:characterId
 5. [ ] GET /me/scenes/:id/characters/:characterId/download
