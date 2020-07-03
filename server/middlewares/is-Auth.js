@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const userService = require('../services/userService');
 
 const isAuth = async (req, res, next) => {
   const authHeader = req.get('Authorization');
@@ -18,12 +19,15 @@ const isAuth = async (req, res, next) => {
   if (!decodedToken) {
     return res.status(401).send();
   }
-//   if (Date.now() >= decodedToken.exp * 1000) {
-//     return false;
-//   }
-  console.log(decodedToken);
+  //   if (Date.now() >= decodedToken.exp * 1000) {
+  //     return false;
+  //   }
+
   req.isAuth = true;
   req.user = decodedToken;
+  // eslint-disable-next-line global-require
+
+  userService.setUser(decodedToken);
   next();
 };
 

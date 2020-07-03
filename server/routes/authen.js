@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrtpy = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const { User, Actor } = require('../models');
 
 const router = express.Router();
 
@@ -21,11 +21,18 @@ router.post('/login', async (req, res, next) => {
     return res.send({ success: false, error: 'Invalid username or password' });
   }
 
+  const actor = await Actor.findOne({
+    where: {
+      UserId: user.id,
+    },
+  });
+
   const token = await jwt.sign(
     {
       username: user.username,
       userId: user.id,
       role: user.role,
+      actorId: actor.id,
     },
     process.env.KEY_TOKEN,
     { expiresIn: '2days' },
