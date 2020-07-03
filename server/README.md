@@ -9,20 +9,20 @@
 
 1. [x] GET /me/scenes (?filter= ["done","not-yet","default"])
 2. [x] GET /me/scenes/:id
-3. [x] GET /me/scenes/:id/characters
-4. [ ] GET /me/scenes/:id/characters/:characterId
-5. [ ] GET /me/scenes/:id/characters/:characterId/download
+3. [] GET /me/scenes/:id/characters (Deprecated)
+4. [ ] GET /me/scenes/:id/characters/:characterId (Deprecated)
+5. [ ] GET /me/scenes/:id/characters/:characterId/download (Deprecated)
 
 ## Admin
 
 ### 1. **Scenes**
 
-1. [ ] GET,POST /scenes
-2. [ ] PUT,DELETE /scenes/:id
-4. [ ] GET, POST /scenes/:id/equipments (filter: ['status','date-time'])
-5. [ ] PUT, DELETE /scenes/:id/equipments/:id
-6. [ ] GET, POST /scenes/:id/characters
-7. [ ] PUT, DELETE /scenes/:id/characters/:id
+1. [x] GET,POST /scenes
+2. [x] GET,PUT,DELETE /scenes/:id
+3. [ ] GET, POST /scenes/:id/equipments (filter: ['status','date-time'])
+4. [ ] PUT, DELETE /scenes/:id/equipments/:id
+5. [x] GET, POST /scenes/:id/characters
+6. [ ] PUT, DELETE /scenes/:id/characters/:id
 
 ### 2. **Actors**
 

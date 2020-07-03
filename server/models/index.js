@@ -116,7 +116,17 @@ const User = sequelize.define(
 const ActorCharactor = sequelize.define(
   'ActorCharactor',
   {},
-  { freezeTableName: true },
+  {
+    freezeTableName: true,
+    hooks: {
+      afterCreate: (actorCharactor, options) => {
+        console.log('After Create actorCharactor', actorCharactor, options);
+      },
+      afterUpdate: (actorCharactor, options) => {
+        console.log('After Update actorCharactor', actorCharactor, options);
+      },
+    },
+  },
 );
 const ScenceEquipment = sequelize.define(
   'ScenceEquipment',
@@ -160,4 +170,5 @@ module.exports = {
   Equipment,
   Character,
   Actor,
+  ActorCharactor,
 };

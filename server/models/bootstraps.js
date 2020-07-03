@@ -1,4 +1,4 @@
-const { User, Actor, Scence, Character } = require('./index');
+const { User, Actor, Scence, Character, ActorCharactor } = require('./index');
 
 const bootStrap = async () => {
   // await Scence.bulkCreate([
@@ -62,23 +62,31 @@ const bootStrap = async () => {
   // ]);
   // ACTOR
 
-  Actor.bulkCreate([
-    {
-      description: 'Americian Actor',
-      imageURL: 'https://www.gstatic.com/tv/thumb/persons/435/435_v9_bc.jpg',
-      UserId: 3,
-    },
-    {
-      description: 'Teacher Three',
-      imageURL: 'https://nguoinoitieng.tv/images/nnt/100/0/beoj.jpg',
-      UserId: 2,
-    },
-    {
-      description: 'Ngoc Trinh',
-      imageURL:
-        'https://media.congluan.vn/files/thanhduyen/2020/05/01/ngoc-trinh-lay-chong-1231.jpg',
-      UserId: 1,
-    },
+  // Actor.bulkCreate([
+  //   {
+  //     description: 'Americian Actor',
+  //     imageURL: 'https://www.gstatic.com/tv/thumb/persons/435/435_v9_bc.jpg',
+  //     UserId: 3,
+  //   },
+  //   {
+  //     description: 'Teacher Three',
+  //     imageURL: 'https://nguoinoitieng.tv/images/nnt/100/0/beoj.jpg',
+  //     UserId: 2,
+  //   },
+  //   {
+  //     description: 'Ngoc Trinh',
+  //     imageURL:
+  //       'https://media.congluan.vn/files/thanhduyen/2020/05/01/ngoc-trinh-lay-chong-1231.jpg',
+  //     UserId: 1,
+  //   },
+  // ]);
+
+  await ActorCharactor.bulkCreate([
+    // { ActorId: 4, CharacterId: 1 },
+    // { ActorId: 4, CharacterId: 3 },
+    // { ActorId: 5, CharacterId: 1 },
+    // { ActorId: 5, CharacterId: 4 },
+    { ActorId: 6, CharacterId: 3 },
   ]);
 };
 

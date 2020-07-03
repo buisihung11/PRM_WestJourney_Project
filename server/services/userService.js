@@ -1,13 +1,19 @@
 /* eslint-disable class-methods-use-this */
 const { Sequelize } = require('sequelize');
-const { Scence, Character } = require('../models/index');
+const { Scence, Character, Actor } = require('../models/index');
 
 const { Op } = Sequelize;
 
 // TODO: ADD WHERE CONDITION THAT FROM USERID
 
 class UserService {
+  setUser(user) {
+    this.user = user;
+  }
+
   async getScenes(filter) {
+    console.log('this.user', this.user);
+    const { actorId } = this.user;
     const where = {};
     switch (filter) {
       case 'done':
@@ -25,25 +31,102 @@ class UserService {
     }
 
     // get user Id
-    const scenes = await Scence.findAll({
-      where,
+    // C1
+    // const scences = await Scence.findAll({
+    //   where,
+    //   include: [
+    //     {
+    //       required: true,
+    //       model: Character,
+    //       include: [
+    //         {
+    //           model: Actor,
+    //           where: {
+    //             id: actorId,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   ],
+    //   mapToModel: Scence,
+    // });
+
+    // C2
+    const scenceIds = await Character.findAll({
+      attributes: ['ScenceId'],
+      include: [
+        {
+          required: true,
+          model: Actor,
+          where: {
+            id: actorId,
+          },
+        },
+      ],
+    }).map(({ ScenceId }) => ScenceId);
+
+    const scences = await Scence.findAll({
+      where: {
+        id: scenceIds,
+      },
     });
-    return scenes;
+
+    return scences;
   }
 
   async getSceneByID(id) {
-    const sceneDetail = await Scence.findByPk(id);
+    const { actorId } = this.user;
+    const sceneDetail = await Scence.findOne({
+      where: {
+        id,
+      },
+      include: [
+        {
+          required: true,
+          model: Character,
+          include: [
+            {
+              model: Actor,
+              require: true,
+              where: {
+                id: actorId,
+              },
+            },
+          ],
+        },
+      ],
+    });
+
     return sceneDetail;
   }
 
   async getCharactersInScence(scenceId) {
-    const characters = await Character.findAll({
+    const { actorId } = this.user;
+
+    const { Characters } = await Scence.findAll({
       where: {
-        scenceId,
+        id: scenceId,
       },
+      include: [
+        {
+          required: true,
+          model: Character,
+          include: [
+            {
+              model: Actor,
+              require: true,
+              where: {
+                id: actorId,
+              },
+            },
+          ],
+        },
+      ],
     });
-    return characters;
+
+    return Characters;
   }
 }
+const userService = new UserService();
 
-module.exports = UserService;
+module.exports = userService;
