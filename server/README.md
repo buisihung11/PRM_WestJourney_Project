@@ -2,14 +2,14 @@
 
 ## User
 
-1. [ ] Login
+1. [x] Login
 2. [ ] Logout
 
 ## Actor
 
 1. [x] GET /me/scenes (?filter= ["done","not-yet","default"])
 2. [x] GET /me/scenes/:id
-3. [ ] GET /me/scenes/:id/characters
+3. [x] GET /me/scenes/:id/characters
 4. [ ] GET /me/scenes/:id/characters/:characterId
 5. [ ] GET /me/scenes/:id/characters/:characterId/download
 

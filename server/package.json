@@ -14,6 +14,8 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "jwt": "^0.2.0",
     "mssql": "^6.2.0",
     "sequelize": "^5.22.3",
     "tedious": "^8.3.0"

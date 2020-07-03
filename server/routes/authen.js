@@ -1,0 +1,38 @@
+const express = require('express');
+const bcrtpy = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+
+const router = express.Router();
+
+router.post('/login', async (req, res, next) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({
+    where: {
+      username,
+    },
+  });
+  if (!user) {
+    return res.send({ success: false, error: 'Not signup!' });
+  }
+
+  const isEqual = await bcrtpy.compare(password, user.password);
+  if (!isEqual) {
+    return res.send({ success: false, error: 'Invalid username or password' });
+  }
+
+  const token = await jwt.sign(
+    {
+      username: user.username,
+      userId: user.id,
+      role: user.role,
+    },
+    process.env.KEY_TOKEN,
+    { expiresIn: '2days' },
+  );
+
+  // return jwt token
+  res.send({ success: true, data: { token, userId: user.id } });
+});
+
+module.exports = router;
