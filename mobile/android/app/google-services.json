@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "844330117593",
+    "firebase_url": "https://prm-journey-west.firebaseio.com",
+    "project_id": "prm-journey-west",
+    "storage_bucket": "prm-journey-west.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844330117593:android:d355c6a781ee99e95551c8",
+        "android_client_info": {
+          "package_name": "com.example.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844330117593-06ec5i592v1nvsipi8t9lke0ed9kid20.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHyjJdOV1gSU1A_2kfBh0Q6zR8Sg1xZiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844330117593-06ec5i592v1nvsipi8t9lke0ed9kid20.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
