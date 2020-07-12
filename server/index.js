@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 // const swaggerUi = require('swagger-ui-express');
@@ -23,6 +24,7 @@ const app = express();
 
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());

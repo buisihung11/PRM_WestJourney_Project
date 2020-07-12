@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 const { Sequelize } = require('sequelize');
-const { Scence, Character, Actor } = require('../models/index');
+const { Scence, Character, Actor, User } = require('../models/index');
 
 const { Op } = Sequelize;
 
@@ -125,6 +125,31 @@ class UserService {
     });
 
     return Characters;
+  }
+
+  async getUserInfo(userId) {
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      return null;
+    }
+
+    const actor = await Actor.findOne({
+      where: {
+        UserId: user.id,
+      },
+    });
+
+    if (!actor) return null;
+    return {
+      userId: user.id,
+      role: user.role,
+      name: user.name,
+      imageURL: actor.imageURL,
+    };
   }
 }
 const userService = new UserService();

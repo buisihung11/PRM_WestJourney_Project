@@ -2,6 +2,8 @@ const express = require('express');
 const bcrtpy = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User, Actor } = require('../models');
+const isAuth = require('../middlewares/is-Auth');
+const userService = require('../services/userService');
 
 const router = express.Router();
 
@@ -39,7 +41,16 @@ router.post('/login', async (req, res, next) => {
   );
 
   // return jwt token
-  res.send({ success: true, data: { token, userId: user.id } });
+  res.send({
+    success: true,
+    data: {
+      token,
+      userId: user.id,
+      role: user.role,
+      name: user.name,
+      imageURL: actor.imageURL,
+    },
+  });
 });
 
 module.exports = router;
