@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/layouts/layout_with_drawer.dart';
 import 'package:mobile/models/Actor.dart';
-import 'package:mobile/screens/admin/actor/actor_detail.dart';
+import 'package:mobile/screens/admin/actor/create_actor_screen.dart';
 import 'package:mobile/widgets/ListItem.dart';
 
 class ActorScreen extends StatelessWidget {
@@ -22,6 +22,9 @@ class ActorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
+      createRoute: ActorDetailScreen.routeName,
+      agruments: ActorDetailAgrument(isUpdate: false),
+      tooltip: "Create new actor",
       title: "Actor Screen",
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -45,9 +48,12 @@ class ActorScreen extends StatelessWidget {
                     title: Text(actorList[index].name),
                     subtitle: Text(actorList[index].gender),
                     onListTap: () {
-                      Navigator.of(context).pushNamed(
-                          ActorDetailScreen.routeName,
-                          arguments: ActorDetailAgrument(actorList[index]));
+                      Navigator.of(context)
+                          .pushNamed(ActorDetailScreen.routeName,
+                              arguments: ActorDetailAgrument(
+                                isUpdate: true,
+                                updateActor: actorList[index],
+                              ));
                     },
                     onDeleteTap: () {},
                   ),

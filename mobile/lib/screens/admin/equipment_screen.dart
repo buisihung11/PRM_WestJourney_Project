@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/layouts/layout_with_drawer.dart';
 import 'package:mobile/models/Equipment.dart';
+import 'package:mobile/screens/admin/equipment/create_equipment.dart';
 import 'package:mobile/screens/admin/equipment/equipment_detail.dart';
 import 'package:mobile/widgets/ListItem.dart';
 
@@ -21,6 +22,8 @@ class EquipmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
+      createRoute: CreateEquipmentScreen.routeName,
+      tooltip: "Create new equipment",
       title: "Equipment",
       body: Padding(
         padding: const EdgeInsets.all(8.0),
