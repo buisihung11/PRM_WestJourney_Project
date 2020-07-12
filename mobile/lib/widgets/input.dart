@@ -44,6 +44,7 @@ class Input extends StatelessWidget {
             initialValue: initialValue,
             minLines: minLines,
             maxLines: maxLines,
+            obscureText: obscureText,
             decoration: InputDecoration(
               labelText: labelText,
             ),

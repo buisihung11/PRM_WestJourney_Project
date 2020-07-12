@@ -41,6 +41,9 @@ class TribulationScreen extends StatelessWidget {
                     title: Text(tribulationList[index].name),
                     subtitle: Text(tribulationList[index].description),
                     onListTap: () {
+                      //               Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      //   builder: (context) => DashBoardScreen(),
+                      // ));
                       Navigator.of(context).pushNamed(
                         TribulationDetail.routename,
                         arguments:

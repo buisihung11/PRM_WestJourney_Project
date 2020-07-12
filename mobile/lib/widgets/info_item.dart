@@ -17,6 +17,7 @@ class Info extends StatelessWidget {
         ),
         Text(
           "$content",
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: Colors.blueAccent,
             fontSize: 18,
