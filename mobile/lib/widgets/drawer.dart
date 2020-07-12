@@ -29,13 +29,10 @@ class MyDrawer extends StatelessWidget {
             title: Text('Home'),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  DashBoardScreen.routeName,
-                  (route) => route.isCurrent &&
-                          route.settings.name == DashBoardScreen.routeName
-                      ? true
-                      : false);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => DashBoardScreen()),
+                  (route) => route.isCurrent ? true : false);
+
               // Navigator.pushNamed(context, DashBoardScreen.routeName);
             },
           ),
@@ -45,13 +42,9 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               // Navigator.pushNamed(context, TribulationScreen.routeName);
-              Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  TribulationScreen.routeName,
-                  (route) => route.isCurrent &&
-                          route.settings.name == TribulationScreen.routeName
-                      ? false
-                      : true);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => TribulationScreen()),
+                  (route) => route.isCurrent ? true : false);
             },
           ),
           ListTile(
@@ -60,13 +53,9 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               // Navigator.pushNamed(context, ActorScreen.routeName);
-              Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  ActorScreen.routeName,
-                  (route) => route.isCurrent &&
-                          route.settings.name == ActorScreen.routeName
-                      ? false
-                      : true);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => ActorScreen()),
+                  (route) => route.isCurrent ? true : false);
             },
           ),
           ListTile(
@@ -75,13 +64,11 @@ class MyDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               // Navigator.pushNamed(context, EquipmentScreen.routeName);
-              Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  EquipmentScreen.routeName,
-                  (route) => route.isCurrent &&
-                          route.settings.name == EquipmentScreen.routeName
-                      ? false
-                      : true);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => EquipmentScreen(),
+                  ),
+                  (route) => route.isCurrent ? true : false);
             },
           ),
         ],

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/screens/admin/actor/actor_detail.dart';
 import 'package:mobile/widgets/drawer.dart';
 
 class LayoutWithDrawer extends StatelessWidget {
   final Widget body;
   final String title;
-  final String createRoute;
   final String tooltip;
-  final Object agruments;
-  const LayoutWithDrawer(
-      {Key key,
-      this.body,
-      this.title = "Default title",
-      this.tooltip,
-      this.createRoute,
-      this.agruments})
-      : super(key: key);
+  final Function onCreate;
+
+  const LayoutWithDrawer({
+    Key key,
+    this.body,
+    this.title = "Default title",
+    this.tooltip,
+    this.onCreate,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +25,9 @@ class LayoutWithDrawer extends StatelessWidget {
       ),
       body: body,
       drawer: MyDrawer(),
-      floatingActionButton: createRoute != null
+      floatingActionButton: onCreate != null
           ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  createRoute,
-                  arguments: agruments,
-                );
-              },
+              onPressed: onCreate,
               tooltip: tooltip,
               child: Icon(Icons.add),
             )

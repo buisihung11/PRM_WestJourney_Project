@@ -6,9 +6,9 @@ A new Flutter project.
 
 ### Task
 
-1. Change naming navigation to unamed
-2. Fix drawer naviagtion
-3. Fix `Actor` navigation
-4. Fix `Equipment` navigation
-5. Fix `Tribulation` navigation
-6. Complete Update + Create Screen for `Actor`, `Equipment`, `Tribulation`
+1. [x] Change naming navigation to unamed
+2. [x] Fix drawer naviagtion
+3. [ ] Fix `Actor` navigation
+4. [ ] Fix `Equipment` navigation
+5. [ ] Fix `Tribulation` navigation
+6. [ ] Complete Update + Create Screen for `Actor`, `Equipment`, `Tribulation`

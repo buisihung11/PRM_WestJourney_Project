@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/layouts/layout_with_drawer.dart';
 import 'package:mobile/models/Equipment.dart';
-import 'package:mobile/screens/admin/equipment/create_equipment.dart';
 import 'package:mobile/screens/admin/equipment/equipment_detail.dart';
 import 'package:mobile/widgets/ListItem.dart';
 
@@ -15,14 +14,20 @@ class EquipmentScreen extends StatelessWidget {
       (int index) => Equipment(
             name: "Equipment ${index + 1}",
             description: "Description equipment ${index + 1}",
-            status: index % 2 == 0 ? "available" : "unavailable",
+            status: index % 2 == 0 ? "Available" : "Unavailable",
             quantity: 5 * (index + 1),
           ));
 
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
-      createRoute: CreateEquipmentScreen.routeName,
+      onCreate: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => EquipmentDetailScreen(
+            mode: EditMode.create,
+          ),
+        ));
+      },
       tooltip: "Create new equipment",
       title: "Equipment",
       body: Padding(
@@ -45,10 +50,12 @@ class EquipmentScreen extends StatelessWidget {
                     title: Text(equipmentList[index].name),
                     subtitle: Text(equipmentList[index].quantity.toString()),
                     onListTap: () {
-                      Navigator.of(context).pushNamed(
-                        EquipmentDetailScreen.routeName,
-                        arguments:
-                            EquipmentDetailAgrument(equipmentList[index]),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => EquipmentDetailScreen(
+                            updateEquipment: equipmentList[index],
+                          ),
+                        ),
                       );
                     },
                     onDeleteTap: () {},

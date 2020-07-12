@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/layouts/layout_with_drawer.dart';
 import 'package:mobile/models/Actor.dart';
-import 'package:mobile/screens/admin/actor/create_actor_screen.dart';
+import 'package:mobile/screens/admin/actor/actor_detail.dart';
 import 'package:mobile/widgets/ListItem.dart';
 
 class ActorScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class ActorScreen extends StatelessWidget {
       (int index) => Actor(
             name: "Actor ${index + 1}",
             description: "Description actor ${index + 1}",
-            gender: index % 2 == 0 ? "male" : "female",
+            gender: index % 2 == 0 ? "Male" : "Female",
             phone: "0912121212",
             username: "actor@gmail.com",
           ));
@@ -22,8 +22,13 @@ class ActorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
-      createRoute: ActorDetailScreen.routeName,
-      agruments: ActorDetailAgrument(isUpdate: false),
+      onCreate: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ActorDetailScreen(
+            mode: EditMode.create,
+          ),
+        ));
+      },
       tooltip: "Create new actor",
       title: "Actor Screen",
       body: Padding(
@@ -48,12 +53,14 @@ class ActorScreen extends StatelessWidget {
                     title: Text(actorList[index].name),
                     subtitle: Text(actorList[index].gender),
                     onListTap: () {
-                      Navigator.of(context)
-                          .pushNamed(ActorDetailScreen.routeName,
-                              arguments: ActorDetailAgrument(
-                                isUpdate: true,
-                                updateActor: actorList[index],
-                              ));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ActorDetailScreen(
+                            mode: EditMode.read,
+                            updateActor: actorList[index],
+                          ),
+                        ),
+                      );
                     },
                     onDeleteTap: () {},
                   ),

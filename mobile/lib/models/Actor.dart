@@ -8,7 +8,7 @@ class Actor {
   String phone;
   String password;
   Actor(
-      {this.password,
+      {this.password = "123456",
       this.id,
       this.description,
       this.imageURL =

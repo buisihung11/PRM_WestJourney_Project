@@ -16,7 +16,7 @@ class Info extends StatelessWidget {
               color: Colors.blueAccent.withOpacity(0.7), fontSize: 15),
         ),
         Text(
-          content,
+          "$content",
           style: TextStyle(
             color: Colors.blueAccent,
             fontSize: 18,
