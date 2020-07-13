@@ -1,5 +1,12 @@
 /* eslint-disable class-methods-use-this */
-const { Scence, Character, Actor, ActorCharactor } = require('../models/index');
+const {
+  Scence,
+  Character,
+  Actor,
+  ActorCharactor,
+  Equipment,
+  User,
+} = require('../models/index');
 
 class AdminService {
   setUser(user) {
@@ -16,6 +23,66 @@ class AdminService {
     const scenceDetail = await Scence.findByPk(id);
     return scenceDetail;
   }
+
+  // #region Actor
+  async getActors() {
+    const actor = await Actor.findAll({
+      include: [
+        {
+          required: true,
+          model: User,
+          where: {
+            isDeleted: false,
+          },
+        },
+      ],
+    });
+
+    return actor;
+  }
+
+  async deleteActor(actorId) {
+    const actor = await Actor.findByPk(actorId);
+    if (!actor) throw new Error('Not found that actor');
+    const user = await User.findOne({
+      where: {
+        id: actor.UserId,
+      },
+    });
+    console.log('Deleted: ', user.id);
+
+    const deletedUser = await user.update({
+      isDeleted: true,
+    });
+    return actor.id;
+  }
+
+  // #endregion
+
+  // #region Equipment
+
+  async getEquipments({ status, fromDate, toDate }) {
+    const where = {
+      isDeleted: false,
+    };
+    if (status) {
+      if (status.toLowerCase() !== 'all') where.status = status;
+      // where.
+    }
+    return Equipment.findAll({ where });
+  }
+
+  async deleteEquipment(equipmentId) {
+    const equipment = await Equipment.findByPk(equipmentId);
+    if (!equipment) throw new Error('Not found that equipment');
+
+    const deletedEquipment = await equipment.update({
+      isDeleted: true,
+    });
+    return deletedEquipment.id;
+  }
+
+  // #endregion
 
   // #region CRUD Scence
 

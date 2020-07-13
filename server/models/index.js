@@ -18,9 +18,12 @@ const Character = sequelize.define(
     // attributes
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     descriptionFileURL: DataTypes.STRING,
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   { freezeTableName: true },
 );
@@ -30,12 +33,15 @@ const Equipment = sequelize.define(
     // attributes
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     description: DataTypes.STRING,
     imageURL: DataTypes.STRING,
     status: DataTypes.STRING,
     quantity: DataTypes.INTEGER,
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   { freezeTableName: true },
 );
@@ -45,13 +51,16 @@ const Scence = sequelize.define(
     // attributes
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     description: DataTypes.STRING,
     filmingAddress: DataTypes.STRING,
     filmingStartDate: DataTypes.DATE,
     filmingEndDate: DataTypes.DATE,
     setQuantity: DataTypes.INTEGER,
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   { freezeTableName: true },
 );
@@ -62,7 +71,6 @@ const Token = sequelize.define(
     // attributes
     token: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
   },
   { freezeTableName: true },
@@ -74,11 +82,9 @@ const User = sequelize.define(
     // attributes
     username: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     gender: {
       type: DataTypes.STRING,
@@ -92,7 +98,6 @@ const User = sequelize.define(
     phone: DataTypes.STRING,
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
       set(value) {
         // Storing passwords in plaintext in the database is terrible.
         // Hashing the value with an appropriate cryptographic hash function is better.
@@ -101,10 +106,13 @@ const User = sequelize.define(
     },
     role: {
       type: DataTypes.STRING,
-      allowNull: false,
       validate: {
         isIn: [['admin', 'actor']],
       },
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
@@ -171,4 +179,5 @@ module.exports = {
   Character,
   Actor,
   ActorCharactor,
+  ScenceEquipment,
 };

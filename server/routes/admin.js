@@ -104,4 +104,43 @@ router
     return res.status(201).send(createdCharacter);
   });
 
+router.route('/actors').get(async (req, res) => {
+  const actors = await adminService.getActors();
+  return res.send(actors);
+});
+
+router.route('/actors/:actorId').delete(async (req, res) => {
+  const { actorId } = req.params;
+  try {
+    const deletedActorId = await adminService.deleteActor(actorId);
+    return res.status(200).send({ actorId: deletedActorId });
+  } catch (e) {
+    return res.status(400).send({ error: e.message });
+  }
+});
+
+router.route('/equipments').get(async (req, res) => {
+  const {
+    status,
+    fromDate = new Date().toISOString(),
+    toDate = new Date().toISOString(),
+  } = req.query;
+  const equipments = await adminService.getEquipments({
+    status,
+    fromDate,
+    toDate,
+  });
+  return res.send(equipments);
+});
+
+router.route('/equipments/:equipmentId').delete(async (req, res) => {
+  const { equipmentId } = req.params;
+  try {
+    const deletedEquipmentId = await adminService.deleteEquipment(equipmentId);
+    return res.status(200).send({ equipmentId: deletedEquipmentId });
+  } catch (e) {
+    return res.status(400).send({ error: e.message });
+  }
+});
+
 module.exports = router;

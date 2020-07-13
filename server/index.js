@@ -13,6 +13,7 @@ const bootstraps = require('./models/bootstraps');
 const userRoute = require('./routes/user');
 const authRoute = require('./routes/authen');
 const adminRoute = require('./routes/admin');
+const userInfoRoute = require('./routes/user-info');
 
 const isAuth = require('./middlewares/is-Auth');
 const isAuthor = require('./middlewares/is-Author');
@@ -33,6 +34,7 @@ app.use(authRoute);
 
 // Private routes
 app.use(isAuth);
+app.use('/me', userInfoRoute);
 app.use('/me', isAuthor('actor'), userRoute);
 
 // Admin
@@ -50,8 +52,8 @@ app.listen(PORT, async () => {
   try {
     await sequelize.authenticate();
     // await sequelize.drop();
-    configModel();
-    // bootstraps();
+    await configModel();
+    // await bootstraps();
     // await sequelize.sync({ force: true });
     console.log('Connection has been established successfully.');
   } catch (error) {
