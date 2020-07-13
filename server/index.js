@@ -30,6 +30,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 
+app.get('/ping', (req, res) => res.send('Hello World'));
 app.use(authRoute);
 
 // Private routes
