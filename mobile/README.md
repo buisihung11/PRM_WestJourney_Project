@@ -24,12 +24,13 @@ A new Flutter project.
 3. [x] Tribulation detail for `Actor`
 4. [x] Add `canDelete`  to `ListItem`
 5. [x] Fetch `Tribulation`, `Actor`, `Equipment` for *Admin* (empty)
-6. [ ] Delete `Tribulation`, `Actor`, `Equipment` for *Admin* 
+6. [x] Delete `Actor`, `Equipment` for *Admin* 
 
 #### Phase 3
 
 1. [ ] Update `Actor`, `Equipment` for *Admin* 
 2. [ ] Create `Tribulation`for *Admin*
 3. [ ] Update `Tribulation`, for *Admin* 
-4. [ ] Save FCM to server when loggin success
-5. [ ] Receive **`Notification`** for *Actor*
+4. [ ] Delete `Tribulation`, for *Admin* 
+5. [ ] Save FCM to server when loggin success
+6. [ ] Receive **`Notification`** for *Actor*
