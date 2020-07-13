@@ -7,6 +7,7 @@ class LayoutWithDrawer extends StatelessWidget {
   final String title;
   final String tooltip;
   final Function onCreate;
+  final Function onReload;
 
   const LayoutWithDrawer({
     Key key,
@@ -14,6 +15,7 @@ class LayoutWithDrawer extends StatelessWidget {
     this.title = "Default title",
     this.tooltip,
     this.onCreate,
+    this.onReload,
   }) : super(key: key);
 
   @override
@@ -22,6 +24,14 @@ class LayoutWithDrawer extends StatelessWidget {
       appBar: AppBar(
         title: Text("$title"),
         centerTitle: true,
+        actions: <Widget>[
+          onReload != null
+              ? IconButton(
+                  icon: Icon(Icons.replay),
+                  onPressed: onReload,
+                )
+              : SizedBox.shrink(),
+        ],
       ),
       body: body,
       drawer: MyDrawer(),

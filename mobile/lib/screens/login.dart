@@ -58,7 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLogging = true;
       });
-      final success = await userRepository.login(username, password);
+      final success =
+          await userRepository.login(username.trim(), password.trim());
       if (success) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => DashBoardScreen(),

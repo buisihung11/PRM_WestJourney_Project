@@ -19,11 +19,11 @@ A new Flutter project.
 
 #### Phase 2
 
-1. [ ] Check filter when get `Tribulation`
+1. [x] Check filter when get `Tribulation`
 2. [ ] Show **empty** when fetch empty for *Actor*
-3. [ ] Tribulation detail for `Actor`
-4. [ ] Add `canDelete`  to `ListItem`
-5. [ ] Fetch `Tribulation`, `Actor`, `Equipment` for *Admin* (empty)
+3. [x] Tribulation detail for `Actor`
+4. [x] Add `canDelete`  to `ListItem`
+5. [x] Fetch `Tribulation`, `Actor`, `Equipment` for *Admin* (empty)
 6. [ ] Delete `Tribulation`, `Actor`, `Equipment` for *Admin* 
 
 #### Phase 3

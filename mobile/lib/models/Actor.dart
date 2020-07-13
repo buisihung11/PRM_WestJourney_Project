@@ -17,4 +17,17 @@ class Actor {
       this.name,
       this.gender,
       this.phone});
+
+  factory Actor.fromMap(Map<String, dynamic> map) => Actor(
+        id: map["id"],
+        description: map["description"],
+        imageURL: map["imageURL"],
+        username: map["User"]["username"],
+        name: map["User"]["name"],
+        gender: map["User"]["gender"],
+        phone: map["User"]["phone"],
+      );
+
+  static List<Actor> fromList(List<dynamic> list) =>
+      List<Actor>.from(list.map((e) => Actor.fromMap(e)));
 }

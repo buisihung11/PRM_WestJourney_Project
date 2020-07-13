@@ -156,7 +156,15 @@ class _MyDrawerState extends State<MyDrawer> {
               // Navigator.pushNamed(context, DashBoardScreen.routeName);
             },
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Divider(height: 5, thickness: 2),
+          ),
           ..._buildDrawer(),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Divider(height: 5, thickness: 2),
+          ),
           ListTile(
             leading: Icon(AntDesign.logout),
             title: Text('Logout'),

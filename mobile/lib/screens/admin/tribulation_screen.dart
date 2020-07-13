@@ -37,9 +37,13 @@ class _TribulationScreenState extends State<TribulationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadUser();
-    _loadTribulation();
+    _setUp();
     // load Tribulation
+  }
+
+  _setUp() async {
+    await _loadUser();
+    await _loadTribulation();
   }
 
   _loadTribulation() async {
@@ -47,10 +51,13 @@ class _TribulationScreenState extends State<TribulationScreen> {
       loading = true;
     });
     try {
-      final result = await tribulationRepository.getTribulation(filter: filter);
-      setState(() {
-        tribulationList = result;
-      });
+      if (role != null) {
+        final result = await tribulationRepository.getTribulation(
+            filter: filter, role: role);
+        setState(() {
+          tribulationList = result;
+        });
+      }
     } catch (e) {
       setState(() {
         err = e;
@@ -120,6 +127,7 @@ class _TribulationScreenState extends State<TribulationScreen> {
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
       title: "Tribulation",
+      onReload: _loadTribulation,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -138,17 +146,19 @@ class _TribulationScreenState extends State<TribulationScreen> {
                     ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         itemBuilder: (context, index) => ListItem(
+                          canDelete: role == 'admin',
                           title: Text(tribulationList[index].name),
                           subtitle: Text(tribulationList[index].description),
                           onListTap: () {
                             //               Navigator.of(context).pushReplacement(MaterialPageRoute(
                             //   builder: (context) => DashBoardScreen(),
                             // ));
-                            Navigator.of(context).pushNamed(
-                              TribulationDetail.routename,
-                              arguments: TribulationDetailAgrument(
-                                  tribulationList[index]),
-                            );
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => TribulationDetail(
+                                tribulation: tribulationList[index],
+                                role: role,
+                              ),
+                            ));
                           },
                           onDeleteTap: () {},
                         ),
