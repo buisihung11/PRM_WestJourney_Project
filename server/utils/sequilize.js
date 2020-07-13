@@ -13,7 +13,7 @@ const sequelize = new Sequelize(DATABASE_NAME, 'buisihung11', PASSWORD, {
       trustServerCertificate: true,
     },
   },
-  logging: true,
+  logging: false,
 });
 
 module.exports = sequelize;

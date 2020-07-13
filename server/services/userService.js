@@ -13,8 +13,10 @@ class UserService {
 
   async getScenes(filter) {
     console.log('this.user', this.user);
+    console.log('filter', filter);
+    console.log(new Date().toISOString());
     const { actorId } = this.user;
-    const where = {};
+    let where = {};
     switch (filter) {
       case 'done':
         where.filmingEndDate = {
@@ -68,6 +70,7 @@ class UserService {
     const scences = await Scence.findAll({
       where: {
         id: scenceIds,
+        ...where,
       },
     });
 
