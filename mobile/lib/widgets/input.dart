@@ -50,11 +50,12 @@ class Input extends StatelessWidget {
             ),
             onSaved: onSaved,
             validator: (String value) {
+              if (validator != null) {
+                String validate = validator(value);
+                if (validate != null) return validate;
+              }
               if (isRequired) {
                 return validateEmpty(value);
-              }
-              if (validator != null) {
-                return validator(value);
               }
               return null;
             },
