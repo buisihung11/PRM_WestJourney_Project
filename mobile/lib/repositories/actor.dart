@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:mobile/models/Actor.dart';
 import 'package:mobile/utils/index.dart';
 
@@ -24,6 +25,31 @@ class ActorRepository {
       final success = res.statusCode == 200;
       return success;
     } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<bool> createActor(Actor createActor) async {
+    try {
+      final res = await request.post('/actors', data: createActor.toMap());
+      final success = res.statusCode == 201;
+      return success;
+    } on DioError catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<bool> updateActor(Actor updateActor) async {
+    try {
+      final res = await request.put(
+        '/actors/${updateActor.id}',
+        data: updateActor.toMap(),
+      );
+      final success = res.statusCode == 204;
+      return success;
+    } on DioError catch (e) {
       print(e.toString());
       throw e;
     }

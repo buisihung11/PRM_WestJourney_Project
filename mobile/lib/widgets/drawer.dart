@@ -7,6 +7,7 @@ import 'package:mobile/screens/admin/tribulation_screen.dart';
 import 'package:mobile/screens/dashboard.dart';
 import 'package:mobile/screens/login.dart';
 import 'package:mobile/utils/index.dart';
+import 'package:mobile/widgets/image_network.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key key}) : super(key: key);
@@ -124,13 +125,9 @@ class _MyDrawerState extends State<MyDrawer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                imageURL != null
-                    ? Image.network(imageURL)
-                    : Container(
-                        color: Colors.grey,
-                        width: 150,
-                        height: 150,
-                      ),
+                ImageNetwork(
+                  imageURL: imageURL,
+                ),
                 Text(
                   '$userName',
                   textAlign: TextAlign.start,

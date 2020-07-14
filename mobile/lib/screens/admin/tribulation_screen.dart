@@ -144,27 +144,30 @@ class _TribulationScreenState extends State<TribulationScreen> {
               Expanded(
                 child: loading
                     ? Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        itemBuilder: (context, index) => ListItem(
-                          canDelete: role == 'admin',
-                          title: Text(tribulationList[index].name),
-                          subtitle: Text(tribulationList[index].description),
-                          onListTap: () {
-                            //               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            //   builder: (context) => DashBoardScreen(),
-                            // ));
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => TribulationDetail(
-                                tribulation: tribulationList[index],
-                                role: role,
-                              ),
-                            ));
-                          },
-                          onDeleteTap: () {},
-                        ),
-                        // separatorBuilder: (context, index) => Divider(),
-                        itemCount: tribulationList.length,
-                      ),
+                    : tribulationList.length == 0
+                        ? Text("Empty list")
+                        : ListView.builder(
+                            itemBuilder: (context, index) => ListItem(
+                              canDelete: role == 'admin',
+                              title: Text(tribulationList[index].name),
+                              subtitle:
+                                  Text(tribulationList[index].description),
+                              onListTap: () {
+                                //               Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                //   builder: (context) => DashBoardScreen(),
+                                // ));
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => TribulationDetail(
+                                    tribulation: tribulationList[index],
+                                    role: role,
+                                  ),
+                                ));
+                              },
+                              onDeleteTap: () {},
+                            ),
+                            // separatorBuilder: (context, index) => Divider(),
+                            itemCount: tribulationList.length,
+                          ),
               ),
               // LIST TRIBULATION
             ],

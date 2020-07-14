@@ -6,6 +6,7 @@ import 'package:mobile/repositories/actor.dart';
 import 'package:mobile/screens/admin/actor/actor_detail.dart';
 import 'package:mobile/utils/index.dart';
 import 'package:mobile/widgets/ListItem.dart';
+import 'package:mobile/widgets/image_network.dart';
 import 'package:mobile/widgets/text_error.dart';
 
 class ActorScreen extends StatefulWidget {
@@ -132,15 +133,13 @@ class _ActorScreenState extends State<ActorScreen> {
                     : Expanded(
                         child: ListView.builder(
                           itemBuilder: (context, index) => ListItem(
-                            leading: Image.network(
-                              actorList[index].imageURL,
-                              width: 50,
-                              height: 50,
+                            leading: ImageNetwork(
+                              imageURL: actorList[index].imageURL,
                             ),
                             title: Text(actorList[index].name),
                             subtitle: Text(actorList[index].gender),
-                            onListTap: () {
-                              Navigator.of(context).push(
+                            onListTap: () async {
+                              await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ActorDetailScreen(
                                     mode: EditMode.read,
@@ -148,6 +147,7 @@ class _ActorScreenState extends State<ActorScreen> {
                                   ),
                                 ),
                               );
+                              _loadActor();
                             },
                             onDeleteTap: () {
                               _onDelete(actorList[index].id, context);

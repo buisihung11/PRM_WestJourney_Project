@@ -13,14 +13,19 @@ class FirebaseRepository {
   }
 
   Future<String> uploadFile({File uploadFile, bool isImage = true}) async {
-    String fileName = getFileName(uploadFile.path);
-    print("Upload file $fileName");
-    String filePath =
-        "${isImage ? rootImagePath : rootFilePath}/${DateTime.now()}_$fileName";
-    final uploadTask = _storage.ref().child(filePath).putFile(uploadFile);
+    try {
+      String fileName = getFileName(uploadFile.path);
+      print("Upload file $fileName");
+      String filePath =
+          "${isImage ? rootImagePath : rootFilePath}/${DateTime.now()}_$fileName";
+      final uploadTask = _storage.ref().child(filePath).putFile(uploadFile);
 
-    final snapshot = await uploadTask.onComplete;
-    final downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
+      final snapshot = await uploadTask.onComplete;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print("!!!!!Upload fail: $e");
+      return null;
+    }
   }
 }

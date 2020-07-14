@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:mobile/models/Equipment.dart';
 import 'package:mobile/utils/index.dart';
 
@@ -14,6 +15,32 @@ class EquipmentRepository {
         throw Exception(res.data["error"]);
       }
     } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<bool> createEquipment(Equipment createEquipment) async {
+    try {
+      final res =
+          await request.post('/equipments', data: createEquipment.toMap());
+      final success = res.statusCode == 201;
+      return success;
+    } on DioError catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<bool> updateEquipment(Equipment updateEquipment) async {
+    try {
+      final res = await request.put(
+        '/equipments/${updateEquipment.id}',
+        data: updateEquipment.toMap(),
+      );
+      final success = res.statusCode == 204;
+      return success;
+    } on DioError catch (e) {
       print(e.toString());
       throw e;
     }

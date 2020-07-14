@@ -7,6 +7,7 @@ import 'package:mobile/screens/admin/equipment/equipment_detail.dart';
 import 'package:mobile/utils/index.dart';
 import 'package:mobile/widgets/ListItem.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:mobile/widgets/image_network.dart';
 import 'package:mobile/widgets/info_item.dart';
 import 'package:mobile/widgets/text_error.dart';
 
@@ -221,22 +222,26 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                         : Expanded(
                             child: ListView.builder(
                               itemBuilder: (context, index) => ListItem(
-                                leading: Image.network(
-                                  equipmentList[index].imageURL,
+                                leading: ImageNetwork(
+                                  imageURL: equipmentList[index].imageURL,
                                 ),
                                 title: Text(equipmentList[index].name),
                                 subtitle: Text(EquipmentScreen
                                     .equipmentList[index].quantity
                                     .toString()),
                                 onListTap: () {
-                                  Navigator.of(context).push(
+                                  Navigator.of(context)
+                                      .push(
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           EquipmentDetailScreen(
                                         updateEquipment: equipmentList[index],
                                       ),
                                     ),
-                                  );
+                                  )
+                                      .then((value) {
+                                    _loadEquipment();
+                                  });
                                 },
                                 onDeleteTap: () {
                                   _onDelete(equipmentList[index].id, context);

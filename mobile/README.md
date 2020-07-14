@@ -20,7 +20,7 @@ A new Flutter project.
 #### Phase 2
 
 1. [x] Check filter when get `Tribulation`
-2. [ ] Show **empty** when fetch empty for *Actor*
+2. [x] Show **empty** when fetch empty for *Actor*
 3. [x] Tribulation detail for `Actor`
 4. [x] Add `canDelete`  to `ListItem`
 5. [x] Fetch `Tribulation`, `Actor`, `Equipment` for *Admin* (empty)
@@ -28,9 +28,13 @@ A new Flutter project.
 
 #### Phase 3
 
-1. [ ] Update `Actor`, `Equipment` for *Admin* 
-2. [ ] Create `Tribulation`for *Admin*
-3. [ ] Update `Tribulation`, for *Admin* 
-4. [ ] Delete `Tribulation`, for *Admin* 
-5. [ ] Save FCM to server when loggin success
-6. [ ] Receive **`Notification`** for *Actor*
+1. [x] Create `Actor`, `Equipment` for *Admin* 
+2. [x] Update `Actor`, `Equipment` for *Admin* 
+3. [x] Fix equipment detail for status value
+
+#### Phase 4
+1. [ ] Create `Tribulation`for *Admin*
+2. [ ] Update `Tribulation`, for *Admin* 
+3. [ ] Delete `Tribulation`, for *Admin* 
+4. [ ] Save FCM to server when loggin success
+5. [ ] Receive **`Notification`** for *Actor*

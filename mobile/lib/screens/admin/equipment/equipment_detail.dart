@@ -1,9 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/models/Equipment.dart';
+import 'package:mobile/repositories/equipment.dart';
+import 'package:mobile/screens/admin/equipment_screen.dart';
 import 'package:mobile/widgets/image_uploader.dart';
 import 'package:mobile/widgets/info_item.dart';
 import 'package:mobile/widgets/input.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import "package:mobile/utils/extensions.dart";
 
 class EquipmentDetailAgrument {
   final Equipment equipment;
@@ -25,10 +30,16 @@ class EquipmentDetailScreen extends StatefulWidget {
 
 class EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
   Equipment currentEquipment;
+  ProgressDialog pr;
+  final EquipmentRepository equipmentRepository = EquipmentRepository();
 
   @override
   void initState() {
     super.initState();
+    pr = new ProgressDialog(context,
+        showLogs: true,
+        type: ProgressDialogType.Download,
+        isDismissible: false);
     setState(() {
       switch (widget.mode) {
         case EditMode.create:
@@ -72,11 +83,79 @@ class EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
     }
   }
 
-  _handleSubmit() {
+  _handleSubmit() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       // print("$username - $password");
+      try {
+        final isUpdate = widget.mode == EditMode.update;
+        pr.style(
+          message: "${isUpdate ? 'Updating' : 'Creating'} equipment...",
+          progressWidget: CircularProgressIndicator(),
+          elevation: 10.0,
+          insetAnimCurve: Curves.easeInOut,
+        );
+        await pr.show();
+        bool success;
+        if (isUpdate) {
+          success = await equipmentRepository.updateEquipment(currentEquipment);
+        } else {
+          success = await equipmentRepository.createEquipment(currentEquipment);
+        }
+        if (success) {
+          // show alert
+          await pr.hide();
+          await _showMyDialog(
+              content: "${isUpdate ? 'Update' : 'Create'} Success!");
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => EquipmentScreen(),
+          ));
+          // return to actor screen
+        }
+      } catch (e) {
+        String errorContent = "Something wrong";
+        if (e is DioError) {
+          errorContent =
+              e.response.data["error"].toString() ?? e.response.statusMessage;
+        }
+        await _showMyDialog(content: errorContent, isError: true);
+      } finally {
+        await pr.hide();
+      }
     }
+  }
+
+  Future<void> _showMyDialog({bool isError = false, String content}) async {
+    String title = isError ? "Error" : "Success";
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title,
+              style: TextStyle(
+                color: isError ? Colors.redAccent : Colors.green,
+              )),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(content),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String _getTitle() {
@@ -163,13 +242,13 @@ class EquipmentDetailScreenState extends State<EquipmentDetailScreen> {
                             ),
                             mode != EditMode.read
                                 ? DropdownButtonFormField(
-                                    items: ["Available", "Unavailable"]
+                                    items: ["available", "unavailable"]
                                         .map((String category) {
                                       return new DropdownMenuItem(
                                           value: category,
                                           child: Row(
                                             children: <Widget>[
-                                              Text(category),
+                                              Text(category.capitalize()),
                                             ],
                                           ));
                                     }).toList(),

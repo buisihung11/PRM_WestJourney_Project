@@ -11,8 +11,7 @@ class Actor {
       {this.password = "123456",
       this.id,
       this.description,
-      this.imageURL =
-          "https://i.pinimg.com/originals/9d/97/a2/9d97a28b5894f5118f5841810eacae80.png",
+      this.imageURL,
       this.username,
       this.name,
       this.gender,
@@ -22,11 +21,22 @@ class Actor {
         id: map["id"],
         description: map["description"],
         imageURL: map["imageURL"],
-        username: map["User"]["username"],
-        name: map["User"]["name"],
-        gender: map["User"]["gender"],
-        phone: map["User"]["phone"],
+        username: map["username"],
+        name: map["name"],
+        gender: map["gender"],
+        phone: map["phone"],
       );
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "description": description,
+        "imageURL": imageURL,
+        "username": username,
+        "name": name,
+        "gender": gender.toLowerCase(),
+        "phone": phone,
+        "password": password,
+      };
 
   static List<Actor> fromList(List<dynamic> list) =>
       List<Actor>.from(list.map((e) => Actor.fromMap(e)));

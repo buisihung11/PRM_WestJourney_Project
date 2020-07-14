@@ -1,10 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/models/Actor.dart';
+import 'package:mobile/repositories/actor.dart';
+import 'package:mobile/screens/admin/actor_screen.dart';
 import 'package:mobile/utils/validators.dart';
 import 'package:mobile/widgets/image_uploader.dart';
 import 'package:mobile/widgets/info_item.dart';
 import 'package:mobile/widgets/input.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import "package:mobile/utils/extensions.dart";
 
 class ActorDetailScreen extends StatefulWidget {
   static final String routeName = "/createActor";
@@ -20,10 +25,15 @@ class ActorDetailScreen extends StatefulWidget {
 
 class _ActorDetailScreenState extends State<ActorDetailScreen> {
   Actor currentActor;
-
+  ProgressDialog pr;
+  final ActorRepository actorRepository = ActorRepository();
   @override
   void initState() {
     super.initState();
+    pr = new ProgressDialog(context,
+        showLogs: true,
+        type: ProgressDialogType.Download,
+        isDismissible: false);
     setState(() {
       switch (widget.mode) {
         case EditMode.create:
@@ -52,12 +62,15 @@ class _ActorDetailScreenState extends State<ActorDetailScreen> {
   _handleMenuOption(String value) {
     switch (value) {
       case 'update':
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => ActorDetailScreen(
-            mode: EditMode.update,
-            updateActor: currentActor,
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => ActorDetailScreen(
+              mode: EditMode.update,
+              updateActor: currentActor,
+            ),
           ),
-        ));
+          result: false,
+        );
         break;
       case 'delete':
         break;
@@ -66,11 +79,82 @@ class _ActorDetailScreenState extends State<ActorDetailScreen> {
     }
   }
 
-  _handleSubmit() {
+  _handleSubmit() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       // print("$username - $password");
+      try {
+        final isUpdate = widget.mode == EditMode.update;
+        pr.style(
+          message: "${isUpdate ? 'Updating' : 'Creating'} actor...",
+          progressWidget: CircularProgressIndicator(),
+          elevation: 10.0,
+          insetAnimCurve: Curves.easeInOut,
+        );
+        await pr.show();
+        bool success;
+        if (isUpdate) {
+          success = await actorRepository.updateActor(currentActor);
+        } else {
+          success = await actorRepository.createActor(currentActor);
+        }
+        if (success) {
+          // show alert
+          await pr.hide();
+          await _showMyDialog(
+              content: "${isUpdate ? 'Update' : 'Create'} Success!");
+          if (!isUpdate) {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => ActorScreen(),
+                ),
+                result: true);
+          }
+          // return to actor screen
+        }
+      } catch (e) {
+        String errorContent = "Something wrong";
+        if (e is DioError) {
+          errorContent = e.response.data["error"];
+        }
+        await _showMyDialog(content: errorContent, isError: true);
+      } finally {
+        await pr.hide();
+      }
     }
+  }
+
+  Future<void> _showMyDialog({bool isError = false, String content}) async {
+    String title = isError ? "Error" : "Success";
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title,
+              style: TextStyle(
+                color: isError ? Colors.redAccent : Colors.green,
+              )),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(content),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String _getTitle() {
@@ -153,7 +237,7 @@ class _ActorDetailScreenState extends State<ActorDetailScreen> {
                             keyboardType: TextInputType.emailAddress,
                             initialValue: username,
                             isRequired: true,
-                            readOnly: mode == EditMode.read,
+                            readOnly: mode != EditMode.create,
                             onSaved: (String value) {
                               {
                                 currentActor.username = value;
@@ -190,12 +274,12 @@ class _ActorDetailScreenState extends State<ActorDetailScreen> {
                           mode != EditMode.read
                               ? DropdownButtonFormField(
                                   items:
-                                      ["Male", "Female"].map((String category) {
+                                      ["male", "female"].map((String category) {
                                     return new DropdownMenuItem(
                                         value: category,
                                         child: Row(
                                           children: <Widget>[
-                                            Text(category),
+                                            Text(category.capitalize()),
                                           ],
                                         ));
                                   }).toList(),
@@ -213,7 +297,7 @@ class _ActorDetailScreenState extends State<ActorDetailScreen> {
                                 )
                               : Info(label: "Gender", content: gender),
                           Input(
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             isRequired: true,
                             initialValue: phone,
                             onSaved: (String value) {

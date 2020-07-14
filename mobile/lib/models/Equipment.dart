@@ -10,8 +10,7 @@ class Equipment {
       {this.id,
       this.name,
       this.description,
-      this.imageURL =
-          "https://images.unsplash.com/photo-1581550279519-e2b2baf70ba6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80",
+      this.imageURL,
       this.status,
       this.quantity});
 
@@ -21,7 +20,17 @@ class Equipment {
         description: map["description"],
         imageURL: map["imageURL"],
         quantity: map["quantity"],
+        status: map["status"],
       );
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "imageURL": imageURL,
+        "status": status,
+        "quantity": quantity,
+      };
 
   static List<Equipment> fromList(List<dynamic> list) =>
       List<Equipment>.from(list.map((e) => Equipment.fromMap(e)));

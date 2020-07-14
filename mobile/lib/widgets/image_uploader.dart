@@ -53,18 +53,23 @@ class _ImageUploaderState extends State<ImageUploader> {
                         onPressed: () {
                           getImage();
                         })
-                    : Text(""),
+                    : SizedBox.shrink(),
               ],
             )
           : Container(
               width: 70,
               height: 50,
-              child: RaisedButton(
-                onPressed: () {
-                  getImage();
-                },
-                child: Text("Pick Image"),
-              ),
+              child: widget.disableChange
+                  ? Image.asset(
+                      'assets/images/no_image.jpg',
+                      fit: BoxFit.cover,
+                    )
+                  : RaisedButton(
+                      onPressed: () {
+                        getImage();
+                      },
+                      child: Text("Pick Image"),
+                    ),
             ),
     );
   }
