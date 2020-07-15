@@ -12,6 +12,12 @@ Future<void> openLink(String link) async {
   }
 }
 
+String formatDateStringWithFormat({String d, String format = "yyyy-MM-dd"}) {
+  final DateFormat formatter = DateFormat(format);
+  final String formatted = formatter.format(DateFormat("dd-MM-yyyy").parse(d));
+  return formatted;
+}
+
 String formatDate(DateTime d) {
   final DateFormat formatter = DateFormat('dd-MM-yyyy');
   final String formatted = formatter.format(d);
@@ -74,7 +80,7 @@ class CustomInterceptors extends InterceptorsWrapper {
 
 class MyRequest {
   static BaseOptions options = new BaseOptions(
-    baseUrl: SERVER_API,
+    baseUrl: DEV_SERVER_API,
     headers: {
       Headers.contentTypeHeader: "application/json",
     },

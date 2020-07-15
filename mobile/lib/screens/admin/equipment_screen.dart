@@ -78,12 +78,13 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
       final success = await equipmentRepository.deleteEquipement(itemId);
       if (success) {
         final snackBar = SnackBar(
+            backgroundColor: Colors.greenAccent,
             content: Text(
-          "Delete success!",
-          style: TextStyle(
-            color: Colors.greenAccent,
-          ),
-        ));
+              "Delete success!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
         Scaffold.of(context).showSnackBar(snackBar);
         _loadEquipment();
       } else {
@@ -226,9 +227,8 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                                   imageURL: equipmentList[index].imageURL,
                                 ),
                                 title: Text(equipmentList[index].name),
-                                subtitle: Text(EquipmentScreen
-                                    .equipmentList[index].quantity
-                                    .toString()),
+                                subtitle: Text(
+                                    equipmentList[index].quantity.toString()),
                                 onListTap: () {
                                   Navigator.of(context)
                                       .push(

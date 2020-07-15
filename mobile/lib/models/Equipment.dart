@@ -1,4 +1,6 @@
-class Equipment {
+import 'package:equatable/equatable.dart';
+
+class Equipment extends Equatable {
   final int id;
   String name;
   String description;
@@ -34,4 +36,10 @@ class Equipment {
 
   static List<Equipment> fromList(List<dynamic> list) =>
       List<Equipment>.from(list.map((e) => Equipment.fromMap(e)));
+
+  // Define that two persons are equal if their SSNs are equal
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id];
 }

@@ -1,11 +1,13 @@
+import 'package:mobile/utils/index.dart';
+
 class Tribulation {
   final int id;
-  final String name;
-  final String description;
-  final String filmingAddress;
-  final String filmingStartDate;
-  final String filmingEndDate;
-  final int setQuantity;
+  String name;
+  String description;
+  String filmingAddress;
+  String filmingStartDate;
+  String filmingEndDate;
+  int setQuantity;
 
   Tribulation(
       {this.id,
@@ -25,6 +27,15 @@ class Tribulation {
         filmingEndDate: map["filmingEndDate"],
         setQuantity: map["setQuantity"],
       );
+
+  Map<String, dynamic> toMap() => {
+        "name": name,
+        "description": description,
+        "filmingAddress": filmingAddress,
+        "filmingStartDate": formatDateStringWithFormat(d: filmingStartDate),
+        "filmingEndDate": formatDateStringWithFormat(d: filmingEndDate),
+        "setQuantity": setQuantity,
+      };
 
   static List<Tribulation> fromList(List<dynamic> list) =>
       List<Tribulation>.from(list.map((e) => Tribulation.fromMap(e)));

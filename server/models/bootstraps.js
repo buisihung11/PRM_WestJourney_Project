@@ -163,33 +163,33 @@ const bootStrap = async () => {
     { ActorId: actor2Id.id, CharacterId: character4.id },
   ]);
 
-  // const equipments = await Equipment.bulkCreate([
-  //   {
-  //     name: 'Clapper board',
-  //     description: 'Clapper board',
-  //     imageURL:
-  //       'https://images-na.ssl-images-amazon.com/images/I/717BJL9gAAL._AC_SL1500_.jpg',
-  //     status: 'available',
-  //     quantity: 5,
-  //     isDeleted: false,
-  //   },
-  //   {
-  //     name: 'Máy quay phim',
-  //     description: 'Máy quay phim',
-  //     imageURL:
-  //       'https://lh3.googleusercontent.com/proxy/EDeDWF5UZZa1rMdN-oX0qcNBRUNZOuodVKIHKEP_IYhTujuN7O-PCmmtLtG7hjy3mp1PUx12z9JCMqbndHjiMNceTOydLVfsmgDgW3zUghnKaVXX_dFCIw',
-  //     status: 'unavailable',
-  //     quantity: 10,
-  //   },
-  // ]);
+  const equipments = await Equipment.bulkCreate([
+    {
+      name: 'Clapper board',
+      description: 'Clapper board',
+      imageURL:
+        'https://images-na.ssl-images-amazon.com/images/I/717BJL9gAAL._AC_SL1500_.jpg',
+      status: 'available',
+      quantity: 5,
+      isDeleted: false,
+    },
+    {
+      name: 'Máy quay phim',
+      description: 'Máy quay phim',
+      imageURL:
+        'https://digi4u.net/media/news/0307_may-quay-phim-panasonic-hdc-mdh3.jpg',
+      status: 'unavailable',
+      quantity: 10,
+    },
+  ]);
 
   // console.log('equipments', equipments);
 
-  // await ScenceEquipment.bulkCreate([
-  //   { ScenceId: scences[0].id, EquipmentId: equipments[0].id },
-  //   { ScenceId: scences[1].id, EquipmentId: equipments[0].id },
-  //   { ScenceId: scences[2].id, EquipmentId: equipments[1].id },
-  // ]);
+  await ScenceEquipment.bulkCreate([
+    { ScenceId: scences[0].id, EquipmentId: equipments[0].id, quantity: 0 },
+    { ScenceId: scences[1].id, EquipmentId: equipments[0].id, quantity: 0 },
+    { ScenceId: scences[2].id, EquipmentId: equipments[1].id, quantity: 0 },
+  ]);
 };
 
 module.exports = bootStrap;

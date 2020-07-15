@@ -17,6 +17,7 @@ class Info extends StatelessWidget {
         ),
         Text(
           "$content",
+          maxLines: 4,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: Colors.blueAccent,

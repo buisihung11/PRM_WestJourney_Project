@@ -4,6 +4,7 @@ import 'package:mobile/layouts/layout_with_drawer.dart';
 import 'package:mobile/models/Tribulation.dart';
 import 'package:mobile/repositories/tribulation.dart';
 import 'package:mobile/screens/admin/tribulation/tribulation_detail.dart';
+import 'package:mobile/screens/admin/tribulation/tribulation_detail_admin.dart';
 import 'package:mobile/utils/index.dart';
 import 'package:mobile/widgets/ListItem.dart';
 
@@ -53,10 +54,14 @@ class _TribulationScreenState extends State<TribulationScreen> {
     try {
       if (role != null) {
         final result = await tribulationRepository.getTribulation(
-            filter: filter, role: role);
-        setState(() {
-          tribulationList = result;
-        });
+          filter: filter,
+          role: role,
+        );
+        if (result != null) {
+          setState(() {
+            tribulationList = result;
+          });
+        }
       }
     } catch (e) {
       setState(() {
@@ -123,6 +128,25 @@ class _TribulationScreenState extends State<TribulationScreen> {
     );
   }
 
+  _navigateToDetai(Tribulation tribulation) async {
+    if (role == 'actor') {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => TribulationDetail(
+          tribulation: tribulation,
+          role: role,
+        ),
+      ));
+    } else {
+      await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => TribulationAdminDetail(
+          tribulation: tribulation,
+          role: role,
+        ),
+      ));
+    }
+    _loadTribulation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
@@ -153,15 +177,7 @@ class _TribulationScreenState extends State<TribulationScreen> {
                               subtitle:
                                   Text(tribulationList[index].description),
                               onListTap: () {
-                                //               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                //   builder: (context) => DashBoardScreen(),
-                                // ));
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => TribulationDetail(
-                                    tribulation: tribulationList[index],
-                                    role: role,
-                                  ),
-                                ));
+                                _navigateToDetai(tribulationList[index]);
                               },
                               onDeleteTap: () {},
                             ),

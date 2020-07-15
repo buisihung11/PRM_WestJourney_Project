@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 const { Sequelize } = require('sequelize');
-const { Scence, Character, Actor, User } = require('../models/index');
+const { Scence, Character, Actor, User, Token } = require('../models/index');
 
 const { Op } = Sequelize;
 
@@ -9,6 +9,30 @@ const { Op } = Sequelize;
 class UserService {
   setUser(user) {
     this.user = user;
+  }
+
+  async saveTokens(fcmToken) {
+    const { userId } = this.user;
+    // const user = await User.findOne({
+    //   where: { id: userId },
+    //   include: [
+    //     {
+    //       model: Token,
+    //       where: { id },
+    //     },
+    //   ],
+    // });
+    const result = await User.findOrCreate({
+      where: { id: userId },
+      include: [
+        {
+          model: Token,
+          where: { token: fcmToken },
+        },
+      ],
+    });
+    console.log('result', result);
+    return result;
   }
 
   async getScenes(filter) {
@@ -71,6 +95,7 @@ class UserService {
       where: {
         id: scenceIds,
         ...where,
+        isDeleted: false,
       },
     });
 

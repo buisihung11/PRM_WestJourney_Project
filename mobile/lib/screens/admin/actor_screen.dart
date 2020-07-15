@@ -73,22 +73,24 @@ class _ActorScreenState extends State<ActorScreen> {
       final success = await actorRepository.deleteActor(itemId);
       if (success) {
         final snackBar = SnackBar(
+            backgroundColor: Colors.green,
             content: Text(
-          "Delete success!",
-          style: TextStyle(
-            color: Colors.greenAccent,
-          ),
-        ));
+              "Delete success!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
         Scaffold.of(context).showSnackBar(snackBar);
         _loadActor();
       } else {
         final snackBar = SnackBar(
+            backgroundColor: Colors.red,
             content: Text(
-          "Delete fail!",
-          style: TextStyle(
-            color: Colors.redAccent,
-          ),
-        ));
+              "Delete fail!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
         Scaffold.of(context).showSnackBar(snackBar);
       }
     } catch (e) {

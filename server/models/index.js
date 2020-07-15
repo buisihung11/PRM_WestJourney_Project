@@ -128,17 +128,34 @@ const ActorCharactor = sequelize.define(
     freezeTableName: true,
     hooks: {
       afterCreate: (actorCharactor, options) => {
-        console.log('After Create actorCharactor', actorCharactor, options);
+        console.log(
+          'Send email create to actor ',
+          actorCharactor.get({ plain: true }.ActorId),
+        );
       },
       afterUpdate: (actorCharactor, options) => {
-        console.log('After Update actorCharactor', actorCharactor, options);
+        console.log(
+          'After Update actorCharactor',
+          actorCharactor.get({ plain: true }.ActorId, options),
+        );
       },
+      afterDestroy: (actorCharactor, options) => {
+        console.log(
+          'Send email destroy to actor ',
+          actorCharactor.get({ plain: true }.ActorId),
+        );
+      },
+      // afterBulkCreate: (models, options) => {
+      //   console.log('afterBulkCreate', models, options);
+      // },
     },
   },
 );
 const ScenceEquipment = sequelize.define(
   'ScenceEquipment',
-  {},
+  {
+    quantity: DataTypes.INTEGER,
+  },
   { freezeTableName: true },
 );
 

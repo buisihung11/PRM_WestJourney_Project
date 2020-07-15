@@ -33,8 +33,16 @@ A new Flutter project.
 3. [x] Fix equipment detail for status value
 
 #### Phase 4
+1. [x] Update `Tribulation`, for *Admin* 
+   1. [x] Update quantity when edit equipment
+   2. [x] Edit Character
+      1. [x] Upload file
+      2. [x] Choose actor for character
+   3. [x] Handle update Tribulation
+
+#### Phase 5
+
 1. [ ] Create `Tribulation`for *Admin*
-2. [ ] Update `Tribulation`, for *Admin* 
-3. [ ] Delete `Tribulation`, for *Admin* 
-4. [ ] Save FCM to server when loggin success
-5. [ ] Receive **`Notification`** for *Actor*
+2. [ ] Delete `Tribulation`, for *Admin* 
+3. [ ] Save FCM to server when loggin success
+4. [ ] Receive **`Notification`** for *Actor*
