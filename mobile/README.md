@@ -42,7 +42,29 @@ A new Flutter project.
 
 #### Phase 5
 
-1. [ ] Create `Tribulation`for *Admin*
-2. [ ] Delete `Tribulation`, for *Admin* 
-3. [ ] Save FCM to server when loggin success
-4. [ ] Receive **`Notification`** for *Actor*
+1. [x] Create `Tribulation`for *Admin*
+2. [x] Delete `Tribulation`, for *Admin* 
+
+#### Phase 6
+
+1. [ ] Save FCM to server when loggin success
+2. [ ] Receive **`Notification`** for *Actor*
+
+<!-- // DateTimeField(
+                                  //   format: DateFormat("dd-MM-yyyy"),
+                                  //   initialValue: DateFormat("dd-MM-yyyy")
+                                  //       .parse(
+                                  //           tribulationInfo.filmingStartDate),
+                                  //   onSaved: (value) {
+                                  //     tribulationInfo.filmingStartDate =
+                                  //         value.toUtc().toString();
+                                  //   },
+                                  //   onShowPicker: (context, currentValue) {
+                                  //     return showDatePicker(
+                                  //         context: context,
+                                  //         firstDate: DateTime(2000),
+                                  //         initialDate:
+                                  //             currentValue ?? DateTime.now(),
+                                  //         lastDate: DateTime(2100));
+                                  //   },
+                                  // ), -->

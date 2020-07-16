@@ -20,6 +20,25 @@ class TribulationRepository {
     }
   }
 
+  Future<bool> deleteTribulation(
+    int tribulationId,
+  ) async {
+    try {
+      String url = "/scences/$tribulationId";
+
+      final res = await request.delete(url);
+      final success = res.statusCode == 200;
+      if (success) {
+        return true;
+      } else {
+        throw Exception(res.data["error"]);
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
   Future<bool> updateTribulation(int tribulationId,
       {Tribulation tribulation,
       List<Equipment> equipments = const [],
@@ -37,6 +56,32 @@ class TribulationRepository {
       final success = res.statusCode == 200;
       if (success) {
         return true;
+      } else {
+        throw Exception(res.data["error"]);
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<Tribulation> createTribulation(
+      {Tribulation tribulation,
+      List<Equipment> equipments = const [],
+      List<Charactor> charactors = const []}) async {
+    try {
+      String url = "/scences";
+      final data = {
+        "tribulation": tribulation.toMap(),
+        "equipments":
+            json.encode(List<dynamic>.from(equipments.map((e) => e.toMap()))),
+        "characters":
+            json.encode(List<dynamic>.from(charactors.map((e) => e.toMap()))),
+      };
+      final res = await request.post(url, data: data);
+      final success = res.statusCode == 201;
+      if (success) {
+        return Tribulation.fromMap(res.data);
       } else {
         throw Exception(res.data["error"]);
       }

@@ -12,7 +12,6 @@ import 'package:mobile/screens/admin/tribulation/edit_character.dart';
 import 'package:mobile/screens/admin/tribulation/edit_equipment.dart';
 import 'package:mobile/utils/index.dart';
 import 'package:mobile/widgets/image_network.dart';
-import 'package:mobile/widgets/info_item.dart';
 import 'package:mobile/widgets/input.dart';
 import 'package:mobile/widgets/text_error.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -49,13 +48,27 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
         showLogs: true,
         type: ProgressDialogType.Download,
         isDismissible: false);
-    _loadTribulationInfo();
+    setState(() {
+      tribulationInfo = widget.mode == EditMode.create
+          ? Tribulation()
+          : widget.tribulation != null ? widget.tribulation : Tribulation();
+      characters = [];
+      equipments = [];
+    });
+    if (widget.mode != EditMode.create) {
+      _loadTribulationInfo();
+    } else {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   _handleUpdate() async {
     try {
       if (!_formKey.currentState.validate()) return;
       _formKey.currentState.save();
+      Tribulation createdTribulation;
       final isUpdate = widget.mode == EditMode.update;
       pr.style(
         message: "${isUpdate ? 'Updating' : 'Creating'} actor...",
@@ -64,24 +77,47 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
         insetAnimCurve: Curves.easeInOut,
       );
       await pr.show();
-      final success = await tribulationRepository.updateTribulation(
-          tribulationInfo.id,
-          tribulation: tribulationInfo,
-          charactors: characters,
-          equipments: equipments);
+      bool success = false;
+      if (isUpdate) {
+        success = await tribulationRepository.updateTribulation(
+            tribulationInfo.id,
+            tribulation: tribulationInfo,
+            charactors: characters,
+            equipments: equipments);
+      } else {
+        createdTribulation = await tribulationRepository.createTribulation(
+            tribulation: tribulationInfo,
+            charactors: characters,
+            equipments: equipments);
+        success = createdTribulation != null;
+        if (success)
+          setState(() {
+            tribulationInfo = createdTribulation;
+          });
+      }
       if (success) {
-        await _showMyDialog(content: "Update success", isError: false);
+        await _showMyDialog(
+            content: "${isUpdate ? 'Updating' : 'Creating'} success",
+            isError: false);
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => TribulationAdminDetail(
-                tribulation: tribulationInfo, role: widget.role)));
+                  tribulation: tribulationInfo,
+                  role: widget.role,
+                  mode: EditMode.read,
+                )));
       }
       print(success);
     } catch (e) {
-      String errorContent = "Something wrong";
-      if (e is DioError) {
-        errorContent = e.response.data["error"];
+      if (e.message == null) return;
+      if (e is FormatException)
+        throw e;
+      else {
+        String errorContent = "Something wrong";
+        if (e is DioError) {
+          errorContent = e.response.data["error"];
+        }
+        await _showMyDialog(content: errorContent, isError: true);
       }
-      await _showMyDialog(content: errorContent, isError: true);
     } finally {
       await pr.hide();
     }
@@ -123,9 +159,12 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
   @override
   Widget build(BuildContext context) {
     bool readOnly = widget.mode == EditMode.read;
+    String title = widget.mode == EditMode.create
+        ? "Create"
+        : tribulationInfo.name ?? "Tribulation";
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.tribulation.name),
+        title: Text(title),
         centerTitle: true,
         actions: <Widget>[
           widget.mode == EditMode.read
@@ -154,22 +193,24 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
                 ? Center(child: CircularProgressIndicator())
                 : tribulationInfo == null
                     ? Text("Error when loading tribulaion")
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Tribulation Info: ",
-                            style: textHeaderStyle.copyWith(
-                                fontSize: 25, color: Colors.grey),
-                          ),
-                          Form(
-                            key: _formKey,
-                            child: Container(
-                              height: 120,
+                    : Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Tribulation Info: ",
+                              style: textHeaderStyle.copyWith(
+                                  fontSize: 25, color: Colors.grey),
+                            ),
+                            Container(
+                              height: 200,
                               child: GridView.count(
                                 crossAxisCount: 2,
-                                padding: EdgeInsets.all(20),
-                                childAspectRatio: 3,
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 0,
+                                childAspectRatio: 2,
                                 children: <Widget>[
                                   Input(
                                     readOnly: readOnly,
@@ -178,146 +219,155 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
                                     onSaved: (value) {
                                       tribulationInfo.name = value;
                                     },
+                                    isRequired: true,
                                   ),
                                   Input(
                                     readOnly: readOnly,
+                                    isRequired: true,
                                     label: "Set Quantity",
-                                    initialValue:
-                                        tribulationInfo.setQuantity.toString(),
+                                    keyboardType: TextInputType.number,
+                                    initialValue: tribulationInfo.setQuantity !=
+                                            null
+                                        ? tribulationInfo.setQuantity.toString()
+                                        : null,
                                     onSaved: (value) {
                                       tribulationInfo.setQuantity =
                                           int.parse(value);
                                     },
                                   ),
-                                  // DateTimeField(
-                                  //   format: DateFormat("dd-MM-yyyy"),
-                                  //   initialValue: DateFormat("dd-MM-yyyy")
-                                  //       .parse(
-                                  //           tribulationInfo.filmingStartDate),
-                                  //   onSaved: (value) {
-                                  //     tribulationInfo.filmingStartDate =
-                                  //         value.toUtc().toString();
-                                  //   },
-                                  //   onShowPicker: (context, currentValue) {
-                                  //     return showDatePicker(
-                                  //         context: context,
-                                  //         firstDate: DateTime(2000),
-                                  //         initialDate:
-                                  //             currentValue ?? DateTime.now(),
-                                  //         lastDate: DateTime(2100));
-                                  //   },
-                                  // ),
                                   Input(
+                                    isRequired: true,
                                     readOnly: readOnly,
                                     label: "Start",
-                                    initialValue: formatDate(
-                                      DateTime.parse(
-                                          tribulationInfo.filmingStartDate),
-                                    ),
+                                    initialValue:
+                                        tribulationInfo.filmingStartDate != null
+                                            ? formatDate(
+                                                DateTime.parse(tribulationInfo
+                                                    .filmingStartDate),
+                                              )
+                                            : null,
                                     onSaved: (value) {
-                                      tribulationInfo.filmingStartDate = value;
+                                      tribulationInfo.filmingStartDate =
+                                          (value as String).trim();
                                     },
                                   ),
                                   Input(
                                     readOnly: readOnly,
+                                    isRequired: true,
                                     label: "End",
                                     keyboardType: TextInputType.datetime,
-                                    initialValue: formatDate(
-                                      DateTime.parse(
-                                          tribulationInfo.filmingEndDate),
-                                    ),
+                                    initialValue: tribulationInfo
+                                                .filmingEndDate !=
+                                            null
+                                        ? formatDate(
+                                            DateTime.parse(
+                                                tribulationInfo.filmingEndDate),
+                                          )
+                                        : null,
                                     onSaved: (value) {
-                                      tribulationInfo.filmingEndDate = value;
+                                      tribulationInfo.filmingEndDate =
+                                          (value as String).trim();
+                                    },
+                                  ),
+                                  Input(
+                                    readOnly: readOnly,
+                                    isRequired: true,
+                                    label: "Address",
+                                    keyboardType: TextInputType.text,
+                                    initialValue:
+                                        tribulationInfo.filmingAddress,
+                                    onSaved: (value) {
+                                      tribulationInfo.filmingAddress = value;
                                     },
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(20),
-                            // height: 30,
-                            child: Input(
-                              readOnly: readOnly,
-                              label: "Description",
-                              initialValue: tribulationInfo.description,
-                              onSaved: (value) {
-                                tribulationInfo.description = value;
-                              },
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              // height: 30,
+                              child: Input(
+                                readOnly: readOnly,
+                                label: "Description",
+                                initialValue: tribulationInfo.description,
+                                onSaved: (value) {
+                                  tribulationInfo.description = value;
+                                },
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          TextError(err: err),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "Charactors: ",
-                                style: textHeaderStyle.copyWith(
-                                    fontSize: 25, color: Colors.grey),
-                              ),
-                              !readOnly
-                                  ? OutlineButton(
-                                      onPressed: _handleEditCharactor,
-                                      child: Text(
-                                        "Add",
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          characters.length == 0
-                              ? Text("Empty characters")
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 200,
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: characters
-                                        .map((e) => _buildCharactor(e))
-                                        .toList(),
-                                  ),
+                            Divider(),
+                            TextError(err: err),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  "Charactors: ",
+                                  style: textHeaderStyle.copyWith(
+                                      fontSize: 25, color: Colors.grey),
                                 ),
-                          Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "Equipments: ",
-                                style: textHeaderStyle.copyWith(
-                                    fontSize: 25, color: Colors.grey),
-                              ),
-                              !readOnly
-                                  ? OutlineButton(
-                                      onPressed: _handleEditEquipment,
-                                      child: Text(
-                                        "Edit",
-                                        style: TextStyle(
-                                          color: Colors.green,
+                                !readOnly
+                                    ? OutlineButton(
+                                        onPressed: _handleEditCharactor,
+                                        child: Text(
+                                          "Add",
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          equipments.length == 0
-                              ? Text("Empty equipments")
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 100,
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: equipments
-                                        .map((e) => _buildEquipment(e))
-                                        .toList(),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            characters.length == 0
+                                ? Text("Empty characters")
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 200,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: characters
+                                          .map((e) => _buildCharactor(e))
+                                          .toList(),
+                                    ),
                                   ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  "Equipments: ",
+                                  style: textHeaderStyle.copyWith(
+                                      fontSize: 25, color: Colors.grey),
                                 ),
-                        ],
+                                !readOnly
+                                    ? OutlineButton(
+                                        onPressed: _handleEditEquipment,
+                                        child: Text(
+                                          "Edit",
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            equipments.length == 0
+                                ? Text("Empty equipments")
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 100,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: equipments
+                                          .map((e) => _buildEquipment(e))
+                                          .toList(),
+                                    ),
+                                  ),
+                          ],
+                        ),
                       ),
           ),
         ),
@@ -455,7 +505,7 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
   Widget _buildCharactor(Charactor charactor) {
     return Builder(
       builder: (context) => Container(
-        width: 250,
+        width: 280,
         height: 70,
         child: Card(
           child: Padding(
@@ -490,16 +540,71 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
                   ),
                 ),
                 ButtonBar(
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    FlatButton(
-                      child: const Text(
-                        'EDIT',
-                        style: TextStyle(color: Colors.greenAccent),
-                      ),
-                      onPressed: () {
-                        _handleEditCharactor(c: charactor);
-                      },
-                    ),
+                    widget.mode != EditMode.read
+                        ? FlatButton(
+                            child: const Text(
+                              'EDIT',
+                              style: TextStyle(color: Colors.greenAccent),
+                            ),
+                            onPressed: () {
+                              _handleEditCharactor(c: charactor);
+                            },
+                          )
+                        : SizedBox.shrink(),
+                    widget.mode != EditMode.read
+                        ? FlatButton(
+                            child: const Text(
+                              'Remove',
+                              style: TextStyle(color: Colors.redAccent),
+                            ),
+                            onPressed: () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                barrierDismissible:
+                                    false, // user must tap button!
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirm'),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text(
+                                              'Would you like to delete this ${charactor.name}'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text(
+                                          'Approve',
+                                          style: TextStyle(
+                                              color: Colors.redAccent),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text(
+                                          'Cancel',
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              if (confirmed)
+                                setState(() {
+                                  characters.remove(charactor);
+                                });
+                            },
+                          )
+                        : SizedBox.shrink(),
                     FlatButton(
                       child: Icon(Icons.file_download),
                       onPressed: () {

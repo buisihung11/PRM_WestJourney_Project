@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:mobile/models/Actor.dart';
 
-class Charactor {
+class Charactor extends Equatable {
   String name;
   String descriptionFileURL;
-  List<Actor> actors;
+  List<Actor> actors = [];
 
   Charactor({
     this.name,
@@ -27,4 +28,8 @@ class Charactor {
 
   static List<Charactor> fromList(List<dynamic> list) =>
       List<Charactor>.from(list.map((e) => Charactor.fromMap(e)));
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [name, actors];
 }

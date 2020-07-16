@@ -21,7 +21,11 @@ class AdminService {
   }
 
   async getAllScences() {
-    const scences = await Scence.findAll();
+    const scences = await Scence.findAll({
+      where: {
+        isDeleted: false,
+      },
+    });
 
     return scences;
   }
@@ -622,87 +626,192 @@ class AdminService {
 
   // #region CRUD Scence
 
-  async createScences({
-    name,
-    description,
-    filmingAddress,
-    filmingStartDate,
-    filmingEndDate,
-    setQuantity,
-  }) {
+  async createScences({ tribulation, characters = [], equipments = [] }) {
     if (
       !(
-        name ||
-        description ||
-        filmingAddress ||
-        filmingStartDate ||
-        filmingEndDate ||
-        setQuantity
+        tribulation ||
+        tribulation.name ||
+        tribulation.filmingStartDate ||
+        tribulation.filmingEndDate ||
+        tribulation.setQuantity
       )
     ) {
       throw new Error('Not valid input');
     }
 
-    const createdScence = await Scence.create(
-      {
-        name,
-        description,
-        filmingAddress,
-        filmingStartDate,
-        filmingEndDate,
-        setQuantity,
-      },
-      {},
-    );
-
-    return createdScence;
-  }
-
-  async updateScenceById(
-    scenceId,
-    {
+    const {
       name,
       description,
       filmingAddress,
       filmingStartDate,
       filmingEndDate,
       setQuantity,
-    },
-  ) {
-    const scence = await Scence.findByPk(scenceId);
-    if (!scence) throw new Error('Not founded that scence');
+    } = tribulation;
+    try {
+      const result = sequelize.transaction(async (t) => {
+        const createdScence = await Scence.create(
+          {
+            name,
+            description,
+            filmingAddress,
+            filmingStartDate,
+            filmingEndDate,
+            setQuantity,
+          },
+          {},
+        );
 
-    const updateResult = await Scence.update(
-      {
-        name,
-        description,
-        filmingAddress,
-        filmingStartDate,
-        filmingEndDate,
-        setQuantity,
-      },
-      {
-        where: {
-          id: scenceId,
-        },
-        returning: true,
-      },
-    );
+        // create equipmets with that scence
+        if (equipments && Array.isArray(equipments)) {
+          for await (const equipmentItem of equipments) {
+            const { id: equipmentId, quantity: createQuantity } = equipmentItem;
+            const equipment = await Equipment.findOne({
+              where: {
+                id: equipmentId,
+              },
+            });
+            if (!equipment) {
+              throw Error(`Not found equipment ${equipmentId}`);
+            }
 
-    return updateResult[1][0];
+            let enoughQuantity = false;
+            enoughQuantity = equipment.quantity >= createQuantity;
+
+            if (!enoughQuantity) {
+              throw Error("Don't have enough quantity");
+            }
+            await equipment.decrement({
+              quantity: createQuantity,
+            });
+            await ScenceEquipment.create({
+              ScenceId: createdScence.id,
+              EquipmentId: equipmentId,
+              quantity: createQuantity,
+            });
+          }
+        }
+
+        // create characters
+        if (characters && Array.isArray(characters)) {
+          for await (const characterItem of characters) {
+            const {
+              name: characterName,
+              descriptionFileURL,
+              actors,
+            } = characterItem;
+
+            console.log(
+              'actors && Array.isArray(actors)',
+              actors && Array.isArray(actors),
+            );
+            console.log('actors && Array.isArray(actors)', JSON.parse(actors));
+            const actorArr =
+              actors && Array.isArray(actors) ? actors : JSON.parse(actors);
+            if (actorArr && Array.isArray(actorArr)) {
+              // check if has that actor
+              for await (const actorId of actorArr) {
+                const actor = await Actor.findByPk(actorId);
+                if (!actor) throw Error(`Not found actor ${actorId}`);
+              }
+            }
+            const addedCharacter = await Character.create({
+              name: characterName,
+              descriptionFileURL,
+              ScenceId: createdScence.id,
+            });
+            if (actorArr && Array.isArray(actorArr)) {
+              await ActorCharactor.bulkCreate(
+                actorArr.map((actorId) => ({
+                  ActorId: actorId,
+                  CharacterId: addedCharacter.id,
+                })),
+                {
+                  individualHooks: true,
+                },
+              );
+            }
+          }
+        }
+
+        return createdScence;
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteScenceById(scenceId) {
-    const scence = await Scence.findByPk(scenceId);
-    if (!scence) throw new Error('Not founded that scence');
-
-    const updateResult = await Scence.destroy({
+    const scence = await Scence.findOne({
       where: {
         id: scenceId,
+        isDeleted: false,
       },
     });
+    if (!scence) throw new Error('Not founded that scence');
+    try {
+      const result = await sequelize.transaction(async (t) => {
+        // delete all equipment
 
-    return updateResult;
+        const deleteEquipments = await ScenceEquipment.findAll({
+          where: {
+            ScenceId: scence.id,
+          },
+        });
+
+        deleteEquipments.forEach(async (deleteEquipment) => {
+          const equipment = await Equipment.findOne({
+            where: {
+              id: deleteEquipment.EquipmentId,
+            },
+          });
+
+          await equipment.increment({
+            quantity: deleteEquipment.quantity,
+          });
+
+          await deleteEquipment.destroy();
+        });
+
+        // destroy ActorCharactor
+        const deleteCharacters = await Character.findAll({
+          where: {
+            isDeleted: false,
+          },
+          include: [
+            {
+              model: Scence,
+              where: {
+                id: scenceId,
+              },
+            },
+          ],
+        });
+
+        console.log('deleteCharacters', deleteCharacters);
+
+        for await (const deleteCharacter of deleteCharacters) {
+          await ActorCharactor.destroy({
+            where: {
+              CharacterId: deleteCharacter.id,
+            },
+            individualHooks: true,
+          });
+          await deleteCharacter.update({
+            isDeleted: true,
+          });
+        }
+
+        const updateResult = await scence.update({
+          isDeleted: true,
+        });
+        return updateResult;
+      });
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
   }
 
   // #endregion

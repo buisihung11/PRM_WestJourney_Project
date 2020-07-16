@@ -147,11 +147,22 @@ class _TribulationScreenState extends State<TribulationScreen> {
     _loadTribulation();
   }
 
+  _navigateToCreate() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => TribulationAdminDetail(
+        role: role,
+        mode: EditMode.create,
+      ),
+    ));
+    _loadTribulation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutWithDrawer(
       title: "Tribulation",
       onReload: _loadTribulation,
+      onCreate: _navigateToCreate,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -174,12 +185,14 @@ class _TribulationScreenState extends State<TribulationScreen> {
                             itemBuilder: (context, index) => ListItem(
                               canDelete: role == 'admin',
                               title: Text(tribulationList[index].name),
-                              subtitle:
-                                  Text(tribulationList[index].description),
+                              subtitle: Text(
+                                  tribulationList[index].description ?? ""),
                               onListTap: () {
                                 _navigateToDetai(tribulationList[index]);
                               },
-                              onDeleteTap: () {},
+                              onDeleteTap: () {
+                                _onDelete(tribulationList[index].id, context);
+                              },
                             ),
                             // separatorBuilder: (context, index) => Divider(),
                             itemCount: tribulationList.length,
@@ -191,5 +204,42 @@ class _TribulationScreenState extends State<TribulationScreen> {
         ),
       ),
     );
+  }
+
+  _onDelete(int itemId, [BuildContext context]) async {
+    print("Delete $itemId");
+    try {
+      final success = await tribulationRepository.deleteTribulation(itemId);
+      if (success) {
+        final snackBar = SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Delete success!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
+        Scaffold.of(context).showSnackBar(snackBar);
+        _loadTribulation();
+      } else {
+        final snackBar = SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              "Delete fail!",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ));
+        Scaffold.of(context).showSnackBar(snackBar);
+      }
+    } catch (e) {
+      setState(() {
+        err = e;
+      });
+    } finally {
+      // setState(() {
+      //   loading = false;
+      // });
+    }
   }
 }
