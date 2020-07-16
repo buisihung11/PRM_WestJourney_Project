@@ -61,6 +61,20 @@ class UserRepository {
     await setPref("imageURL", imageURL);
   }
 
+  Future<bool> sendTokenToServer(String fcmToken) async {
+    try {
+      final res =
+          await request.post("/me/tokens", data: {"fcmToken": fcmToken});
+      if (res.data["success"] && res.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception(res.data["error"] ?? "Error when push");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<bool> logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.clear();

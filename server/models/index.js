@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { hashSync } = require('bcryptjs');
 const sequelize = require('../utils/sequilize');
+const notificationService = require('../services/notificationService');
 
 const Actor = sequelize.define(
   'Actor',
@@ -127,23 +128,36 @@ const ActorCharactor = sequelize.define(
   {
     freezeTableName: true,
     hooks: {
-      afterCreate: (actorCharactor, options) => {
-        console.log(
-          'Send email create to actor ',
-          actorCharactor.get({ plain: true }.ActorId),
-        );
+      afterCreate: async (actorCharactor, options) => {
+        const actorId = actorCharactor.get({ plain: true }).ActorId;
+        const characterId = actorCharactor.get({ plain: true }).CharacterId;
+        console.log('actorId, characterId', actorId, characterId);
+
+        // await notificationService.sendNotificationToActor({
+        //   actorId,
+        //   title: 'Ban da nhan duoc vai dien moi',
+        //   content: `Character Id ${characterId}`,
+        // });
       },
-      afterUpdate: (actorCharactor, options) => {
-        console.log(
-          'After Update actorCharactor',
-          actorCharactor.get({ plain: true }.ActorId, options),
-        );
+      afterUpdate: async (actorCharactor, options) => {
+        const actorId = actorCharactor.get({ plain: true }).ActorId;
+        const characterId = actorCharactor.get({ plain: true }).CharacterId;
+        console.log('actorId, characterId', actorId, characterId);
+        // await notificationService.sendNotificationToActor({
+        //   actorId,
+        //   title: 'Ban da nhan duoc vai dien moi',
+        //   content: `Character Id ${characterId}`,
+        // });
       },
-      afterDestroy: (actorCharactor, options) => {
-        console.log(
-          'Send email destroy to actor ',
-          actorCharactor.get({ plain: true }.ActorId),
-        );
+      afterDestroy: async (actorCharactor, options) => {
+        const actorId = actorCharactor.get({ plain: true }).ActorId;
+        const characterId = actorCharactor.get({ plain: true }).CharacterId;
+        console.log('actorId, characterId', actorId, characterId);
+        // await notificationService.sendNotificationToActor({
+        //   actorId,
+        //   title: 'Vai dien da duoc huy bo',
+        //   content: `Character Id ${characterId}`,
+        // });
       },
       // afterBulkCreate: (models, options) => {
       //   console.log('afterBulkCreate', models, options);

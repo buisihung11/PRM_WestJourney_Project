@@ -20,19 +20,15 @@ class TribulationDetail extends StatefulWidget {
 }
 
 class _TribulationDetailState extends State<TribulationDetail> {
-  List<Charactor> actorCharacters;
+  List<CharactorOfActor> actorCharacters;
   bool loading = true;
   dynamic err;
   final TribulationRepository tribulationRepository = TribulationRepository();
   @override
   void initState() {
     super.initState();
-    if (widget.role == 'actor') {
-      // load actorCharacters
-      _loadCharacterForActor();
-    } else if (widget.role == 'admin') {
-      // load characters and equipments
-    }
+
+    _loadCharacterForActor();
   }
 
   _loadCharacterForActor() async {
@@ -56,71 +52,32 @@ class _TribulationDetailState extends State<TribulationDetail> {
     }
   }
 
-  _loadInfoForAdmin() async {}
-
   Widget _buildTribulationForActor(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        ...(actorCharacters
-            .map((c) => Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        Info(label: "Name", content: c.name),
-                        IconButton(
-                          icon: Icon(Icons.file_download),
-                          onPressed: () {
-                            _onDownloadFile(c.descriptionFileURL, context);
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ))
-            .toList())
-      ],
-    );
-  }
-
-  Widget _buildTribulationForAdmin() {
-    return Column(
-      children: <Widget>[
-        Text(
-          "Charactors: ",
-          style: textHeaderStyle.copyWith(fontSize: 25, color: Colors.grey),
-        ),
-        Container(
-          height: 180,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
+    return actorCharacters == null || actorCharacters?.length == 0
+        ? Text("Empty charactors")
+        : Column(
             children: <Widget>[
-              // _buildCharactor(),
-              // _buildCharactor(),
-              // _buildCharactor(),
+              ...(actorCharacters
+                  .map((c) => Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: <Widget>[
+                              Info(label: "Name", content: c.name),
+                              IconButton(
+                                icon: Icon(Icons.file_download),
+                                onPressed: () {
+                                  _onDownloadFile(
+                                      c.descriptionFileURL, context);
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ))
+                  .toList())
             ],
-          ),
-        ),
-        Divider(),
-        Text(
-          "Equipments: ",
-          style: textHeaderStyle.copyWith(fontSize: 25, color: Colors.grey),
-        ),
-        Container(
-          height: 100,
-          width: MediaQuery.of(context).size.width,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              _buildEquipment(),
-              _buildEquipment(),
-              _buildEquipment(),
-            ],
-          ),
-        ),
-      ],
-    );
+          );
   }
 
   _onDownloadFile(String url, BuildContext context) {
@@ -154,11 +111,11 @@ class _TribulationDetailState extends State<TribulationDetail> {
                       fontSize: 25, color: Colors.grey),
                 ),
                 Container(
-                  height: 200,
+                  height: 250,
                   child: GridView.count(
                     crossAxisCount: 2,
                     padding: EdgeInsets.all(20),
-                    childAspectRatio: 3,
+                    childAspectRatio: 2,
                     children: <Widget>[
                       Info(label: "Name", content: widget.tribulation.name),
                       Info(
@@ -178,20 +135,20 @@ class _TribulationDetailState extends State<TribulationDetail> {
                   ),
                 ),
                 Divider(),
-                TextError(err: err),
+                Container(
+                  height: 50,
+                  child: TextError(err: err),
+                ),
                 Text(
                   "Charactors: ",
                   style: textHeaderStyle.copyWith(
                       fontSize: 25, color: Colors.grey),
                 ),
                 Container(
-                  height: 300,
-                  child: loading
-                      ? Center(child: CircularProgressIndicator())
-                      : widget.role == 'actor'
-                          ? _buildTribulationForActor(context)
-                          : _buildTribulationForAdmin(),
-                ),
+                    height: 300,
+                    child: loading
+                        ? Center(child: CircularProgressIndicator())
+                        : _buildTribulationForActor(context)),
               ],
             ),
           ),

@@ -12,16 +12,6 @@ router.get('/scences', async (req, res) => {
   res.send(scenes);
 });
 
-router.post('/tokens', async (req, res) => {
-  const { fcmToken } = req.body;
-  try {
-    const result = userService.saveTokens(fcmToken);
-    return res.send({ success: true, result });
-  } catch (e) {
-    return res.status(500).send({ error: 'Soemthing wrong' });
-  }
-});
-
 router.get('/scences/:sceneId', async (req, res, next) => {
   const { sceneId } = req.params;
   if (!sceneId) {

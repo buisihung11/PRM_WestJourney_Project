@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
+
 const userService = require('../services/userService');
+const notificationService = require('../services/notificationService');
 
 const isAuth = async (req, res, next) => {
   const authHeader = req.get('Authorization');
+  console.log('CheckAuth', authHeader);
   if (!authHeader) {
     return res.status(401).send();
   }
@@ -28,6 +31,7 @@ const isAuth = async (req, res, next) => {
   // eslint-disable-next-line global-require
 
   userService.setUser(decodedToken);
+  notificationService.setUser(decodedToken);
   next();
 };
 

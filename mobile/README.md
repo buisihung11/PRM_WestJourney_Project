@@ -47,7 +47,7 @@ A new Flutter project.
 
 #### Phase 6
 
-1. [ ] Save FCM to server when loggin success
+1. [x] Save FCM to server when loggin success
 2. [ ] Receive **`Notification`** for *Actor*
 
 <!-- // DateTimeField(

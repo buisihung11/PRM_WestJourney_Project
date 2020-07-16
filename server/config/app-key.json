@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "prm-journey-west",
+  "private_key_id": "40a9afaceda3184f25909f092b86cc056c588ed4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDmsxSfY4qHhiIX\nrF7Pu44iFiRye8JfHjsj+XZwGG/Hr5BQjGgGu6D9lQtUuV2xrx1BrOam6CKroBqH\nNJIVwJhKRihsN2cw6VjAWkS61Di4Y/UdQNAu7qE5g7uInmszSM/jZLjEmWUCN0H6\nwN9Ab51tU2FDdIFpflus7xJO7K8baxajDQkIEvLeUudplRSpg/RIkupx+SZKOBGe\n9z8yciShwyFOGc5JZERQkf0yseoVO5eyR0Sy2NZeU6LkLynzWEZb0HcqeiOKLChY\nOItD84C7zOK+cFhBeTM5FzjYDfDJA0NwyVradx+uE+uV/Z48QlHlQ01svzBgK0jm\n68nuTyFXAgMBAAECggEAIjDuYIUPNfDCQsHwN1dzxEeF1VXUQ+amGznQvOJSRsUV\nXWrBzCWowYyCZmcmpLvwWRh4AsqqwMb0x48aC5FEwNVPDmLTr2MWHUQDpbDoSyO9\nYz2E3T/Os0h71c6s0qf675ew7qpRVxe7dp95NwKT0W0nICk3ONxaV/ICw6G+fhCD\n8qNlSy6BNI4LG1vzDf3LPnAMGDJCDcqLqOo2qnEyA9C++9jKCMjLE79dRwW9/lKd\nRV/nPUkxQkKZIEw/eFQ5t+G/qNuuNQP8qsTDDVrAShAntF0qv0+WHbPBPYJWopYi\nO6S9ixo5agqxrVXADEOkIOSuQ7afZmHJC8Ie28Se2QKBgQD7ACM7Ez3qxFmLuB7g\nLty6nylZwvpd609D/EkyKRIzs5p6AcMxVBl1NJTYKRxUabvgjARyQJngci3WbXdy\nuEV2zLP8+66TGvYPEUpf3WBaGSkFa4x6DPBe4ABDrBKhhp+kP6eg4GYnmlpewPgs\nT4cJM98HoFO9qwYdCfQJF0obcwKBgQDrS21gqtrfYRO/+AQz2R5gX43RTZlUiG5r\nIR1xui1nYDWZjQXi8huOO14iu/bQJzMv43gf+133wWa7Ejywpx3TlrdH2jVbcIzm\nGW2HTW+bAPwBrpZnTHvTE0Zf2w1cJkyeEIDQx36SYw4Hpv3e4b/H0oAZ01q8MG+J\ntD4iko8xjQKBgQC533w3fyRW+lilkw+qTInA2aSxiCYH7v2gBu/daXTFPLekqjF2\nEiVYGjwvZyJHkJVEz+trAFPzVhqDtETEe5lVRHn1WhwJa+nTdqZxH2r+zasHDIHW\n0EYgvBj2BDM30o3eABWOmR6NLUzG5nfhuHLzaao754qb5k58qqZBJTIH6QKBgB6q\nFNYdTisAfs9s5jdPm3rZ2SSm5U2z/hfuF+VDazlmu3WIgHTkMp0ltY33SyIziaM7\nFOOuIb/xL48/wDMRhHyXzskJchy5nVM7ix+wAtSDm1Qoyacqu5R1lZ1WcfZJc4DC\nC9epuCAh0qlCpSFP8Gt9Tn6PIesWsOKUX+iniwvdAoGBAIh9+p5/m+wPG0LRiFhP\ndE7KEi1Il7d4jayijbsKAC+CapFlWSJ0DlQ/VUgpDo1L6OmPK0sjwk0TPfeq4YAs\ntbTRPNgToYbCERwWEuamUkYnq5VZHFXqdkIwCfEpMF9NI1xImETGVxLpK0DSMUVm\n2Vyl5wr8H9WYaZsnFNl5sYYE\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-pkzdd@prm-journey-west.iam.gserviceaccount.com",
+  "client_id": "112061065146057352556",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-pkzdd%40prm-journey-west.iam.gserviceaccount.com"
+}

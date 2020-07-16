@@ -5,7 +5,8 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 // const swaggerUi = require('swagger-ui-express');
 // const swaggerDocument = require('./swagger.json');
-
+require('./models');
+require('./config/firebase');
 const sequelize = require('./utils/sequilize');
 const { configModel } = require('./models');
 const bootstraps = require('./models/bootstraps');
@@ -14,9 +15,11 @@ const userRoute = require('./routes/user');
 const authRoute = require('./routes/authen');
 const adminRoute = require('./routes/admin');
 const userInfoRoute = require('./routes/user-info');
+const tokenRoute = require('./routes/token');
 
 const isAuth = require('./middlewares/is-Auth');
 const isAuthor = require('./middlewares/is-Author');
+const notificationService = require('./services/notificationService');
 
 dotenv.config();
 const { PORT = 5000 } = process.env;
@@ -32,9 +35,10 @@ app.use(express.json());
 
 app.get('/ping', (req, res) => res.send('Hello World'));
 app.use(authRoute);
-
 // Private routes
 app.use(isAuth);
+
+app.use('/me', tokenRoute);
 app.use('/me', userInfoRoute);
 app.use('/me', isAuthor('actor'), userRoute);
 

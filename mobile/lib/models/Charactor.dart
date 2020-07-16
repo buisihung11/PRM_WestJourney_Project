@@ -3,6 +3,34 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:mobile/models/Actor.dart';
 
+class CharactorOfActor extends Equatable {
+  String name;
+  String descriptionFileURL;
+
+  CharactorOfActor({
+    this.name,
+    this.descriptionFileURL,
+  });
+
+  factory CharactorOfActor.fromMap(Map<String, dynamic> map) =>
+      CharactorOfActor(
+        name: map["name"],
+        descriptionFileURL: map["descriptionFileURL"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "name": name,
+        "descriptionFileURL": descriptionFileURL,
+      };
+
+  static List<CharactorOfActor> fromList(List<dynamic> list) =>
+      List<CharactorOfActor>.from(list.map((e) => CharactorOfActor.fromMap(e)));
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [name];
+}
+
 class Charactor extends Equatable {
   String name;
   String descriptionFileURL;

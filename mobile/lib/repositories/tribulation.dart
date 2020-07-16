@@ -140,13 +140,13 @@ class TribulationRepository {
     }
   }
 
-  Future<List<Charactor>> getCharactorInTribulationForActor(
+  Future<List<CharactorOfActor>> getCharactorInTribulationForActor(
       int tribulationId) async {
     try {
       final res = await request.get("/me/scences/$tribulationId");
       final success = res.statusCode == 200;
       if (success) {
-        final result = Charactor.fromList(res.data["Characters"]);
+        final result = CharactorOfActor.fromList(res.data["Characters"]);
         return result;
       } else {
         throw Exception(res.data["error"]);

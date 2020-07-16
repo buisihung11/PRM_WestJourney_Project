@@ -13,26 +13,12 @@ class UserService {
 
   async saveTokens(fcmToken) {
     const { userId } = this.user;
-    // const user = await User.findOne({
-    //   where: { id: userId },
-    //   include: [
-    //     {
-    //       model: Token,
-    //       where: { id },
-    //     },
-    //   ],
-    // });
-    const result = await User.findOrCreate({
-      where: { id: userId },
-      include: [
-        {
-          model: Token,
-          where: { token: fcmToken },
-        },
-      ],
+    console.log('Save Token', userId);
+    const result = await Token.findOrCreate({
+      where: { token: fcmToken, UserId: userId },
     });
-    console.log('result', result);
-    return result;
+    console.log('result', result[0]);
+    return result[0];
   }
 
   async getScenes(filter) {
@@ -55,27 +41,6 @@ class UserService {
       default:
         break;
     }
-
-    // get user Id
-    // C1
-    // const scences = await Scence.findAll({
-    //   where,
-    //   include: [
-    //     {
-    //       required: true,
-    //       model: Character,
-    //       include: [
-    //         {
-    //           model: Actor,
-    //           where: {
-    //             id: actorId,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   ],
-    //   mapToModel: Scence,
-    // });
 
     // C2
     const scenceIds = await Character.findAll({
@@ -131,7 +96,7 @@ class UserService {
   async getCharactersInScence(scenceId) {
     const { actorId } = this.user;
 
-    const { Characters } = await Scence.findAll({
+    const scenceDetail = await Scence.findOne({
       where: {
         id: scenceId,
       },
@@ -139,10 +104,16 @@ class UserService {
         {
           required: true,
           model: Character,
+          where: {
+            isDeleted: false,
+          },
           include: [
             {
               model: Actor,
               require: true,
+              through: {
+                attributes: [],
+              },
               where: {
                 id: actorId,
               },
@@ -151,8 +122,10 @@ class UserService {
         },
       ],
     });
-
-    return Characters;
+    if (!scenceDetail) throw Error('Not found that tribulation');
+    const result = scenceDetail.get({ plain: true }).Characters;
+    console.log('result', result);
+    return result;
   }
 
   async getUserInfo(userId) {

@@ -17,16 +17,6 @@ class TribulationScreen extends StatefulWidget {
 }
 
 class _TribulationScreenState extends State<TribulationScreen> {
-  // final List<Tribulation> tribulationList = List<Tribulation>.generate(
-  //     20,
-  //     (int index) => Tribulation(
-  //           name: "Tribulation ${index + 1}",
-  //           description: "Description ${index + 1}",
-  //           filmingAddress: "Address ${index + 1}",
-  //           setQuantity: (index + 1) * 5,
-  //           filmingStartDate: "22/02/2020",
-  //           filmingEndDate: "30/03/2020",
-  //         ));
   List<Tribulation> tribulationList;
   final TribulationRepository tribulationRepository = TribulationRepository();
 
@@ -162,7 +152,7 @@ class _TribulationScreenState extends State<TribulationScreen> {
     return LayoutWithDrawer(
       title: "Tribulation",
       onReload: _loadTribulation,
-      onCreate: _navigateToCreate,
+      onCreate: role == 'admin' ? _navigateToCreate : null,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(

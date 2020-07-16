@@ -41,6 +41,7 @@ dependencies:
   smart_select: ^3.0.3
   datetime_picker_formfield: ^1.0.0
   file_picker: ^1.12.0
+  firebase_messaging: ^6.0.16
 
 dev_dependencies:
   flutter_test:

@@ -18,13 +18,14 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase-admin": "^9.0.0",
     "helmet": "^3.23.3",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "mssql": "^6.2.0",
     "sequelize": "^5.22.3",
     "swagger-ui-express": "^4.1.4",
-    "tedious": "^8.3.0",
-    "morgan": "^1.10.0"
+    "tedious": "^8.3.0"
   },
   "devDependencies": {
     "eslint": "^7.3.1",
