@@ -5,7 +5,6 @@ const notificationService = require('../services/notificationService');
 
 const isAuth = async (req, res, next) => {
   const authHeader = req.get('Authorization');
-  console.log('CheckAuth', authHeader);
   if (!authHeader) {
     return res.status(401).send();
   }

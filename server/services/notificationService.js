@@ -3,10 +3,10 @@
 /* eslint-disable prefer-template */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
-const firebaseApp = require('../config/firebase');
-const userService = require('./userService');
 const { User, Token, Actor } = require('../models');
+const firebaseApp = require('../config/firebase');
 
+console.log('User', User);
 class NotificationService {
   setUser(user) {
     this.user = user;
@@ -46,8 +46,14 @@ class NotificationService {
           notification: {
             title,
             body: content,
+            image:
+              'https://images.unsplash.com/photo-1534684686641-05569203ecca?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=300',
           },
-          data: { click_action: 'FLUTTER_NOTIFICATION_CLICK' },
+          data: {
+            click_action: 'FLUTTER_NOTIFICATION_CLICK',
+            title,
+            body: content,
+          },
           tokens: registrationTokens,
         };
 
@@ -61,6 +67,7 @@ class NotificationService {
       throw err;
     }
   }
+
   async sendNotificationToUser({ userId, content, title }) {
     // get all token from that userID
     try {

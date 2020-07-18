@@ -24,7 +24,8 @@ router.get('/actor-push', async (req, res) => {
     });
     return res.send({ result });
   } catch (err) {
-    return res.status(500).send({ error: err });
+    console.log('err', err);
+    return res.status(500).send({ error: err.message });
   }
 });
 
@@ -38,7 +39,8 @@ router.get('/testpush', async (req, res) => {
     });
     return res.send({ result });
   } catch (err) {
-    return res.status(500).send({ error: err });
+    console.log('err', err);
+    return res.status(500).send({ error: err.message });
   }
 });
 

@@ -214,7 +214,6 @@ class AdminService {
 
         // update characters
         // neu khong co id => them moi
-        console.log('characters', characters);
 
         // tim nhung character cua scence Id nay ma khong nam trong character
         const deleteCharacters = await Character.findAll({
@@ -233,8 +232,6 @@ class AdminService {
             },
           ],
         });
-
-        console.log('deleteCharacters', deleteCharacters);
 
         for await (const deleteCharacter of deleteCharacters) {
           await ActorCharactor.destroy({
@@ -257,14 +254,8 @@ class AdminService {
               actors,
             } = characterItem;
             const isNewCharacter = characterId == null;
-            console.log('isNewCharacter', isNewCharacter);
-            console.log(
-              'actors && Array.isArray(actors)',
-              actors && Array.isArray(actors),
-            );
-            console.log('actors && Array.isArray(actors)', JSON.parse(actors));
             if (isNewCharacter) {
-              let actorArr =
+              const actorArr =
                 actors && Array.isArray(actors) ? actors : JSON.parse(actors);
               if (actorArr && Array.isArray(actorArr)) {
                 // check if has that actor
@@ -318,7 +309,6 @@ class AdminService {
                   }
                 }
               }
-
               // destroy actor not in updated Actor
               const destroysResult = await ActorCharactor.destroy({
                 where: {
@@ -333,24 +323,7 @@ class AdminService {
             }
           }
         }
-        console.log(
-          'characters.map(({ id }) => id)',
-          characters.map(({ id }) => id).filter((e) => !!e),
-        );
 
-        // await Character.update(
-        //   {
-        //     isDeleted: true,
-        //   },
-        //   {
-        //     where: {
-        //       ScenceId: scenceId,
-        //       id: {
-        //         [Op.notIn]: characters.map(({ id }) => id),
-        //       },
-        //     },
-        //   },
-        // );
         return updatedScence;
       });
       return result;

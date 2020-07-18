@@ -7,4 +7,6 @@ const firebaseApp = admin.initializeApp({
   databaseURL: 'https://prm-journey-west.firebaseio.com',
 });
 
+console.log('Firebase name', firebaseApp.name);
+
 module.exports = firebaseApp;

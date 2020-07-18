@@ -1,7 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/repositories/user.dart';
 import 'package:mobile/screens/dashboard.dart';
+import 'package:mobile/utils/index.dart';
 import 'package:mobile/utils/validators.dart';
 import 'package:mobile/widgets/input.dart';
 
@@ -19,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   dynamic err;
   final _formKey = GlobalKey<FormState>();
   final UserRepository userRepository = UserRepository();
+
+  final FirebaseMessaging _fcm = FirebaseMessaging();
   @override
   void initState() {
     super.initState();
@@ -27,6 +31,20 @@ class _LoginScreenState extends State<LoginScreen> {
       isLogging = true;
     });
     _getUser();
+    _saveDeviceToken();
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        _showItemDialog(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch $message');
+        _showItemDialog(message["data"]);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume $message');
+        _showItemDialog(message["data"]);
+      },
+    );
   }
 
   _getUser() async {
@@ -152,6 +170,49 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 )),
+    );
+  }
+
+  _saveDeviceToken() async {
+    // Get the token for this device
+    String fcmToken = await _fcm.getToken();
+    print("FCMTOKEN: $fcmToken");
+    // Save it to local
+    if (fcmToken != null) {
+      await setFCMToken(fcmToken);
+    }
+  }
+
+  void _showItemDialog(Map<String, dynamic> message) async {
+    print("Showing dialog");
+    final result = await showDialog(
+      context: context,
+      builder: (context) => _buildDialog(
+        context,
+        message["notification"]['title'],
+        message["notification"]['body'],
+      ),
+    );
+    // if (isConfirmToNavigate) _navigateToPhaseScore(message);
+  }
+
+  Widget _buildDialog(BuildContext context, String msg, String content) {
+    return AlertDialog(
+      content: Text(
+        content,
+        style: TextStyle(
+          color: Colors.grey[400],
+        ),
+      ),
+      title: Text(msg),
+      actions: <Widget>[
+        FlatButton(
+          child: const Text('Ok'),
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+        ),
+      ],
     );
   }
 }

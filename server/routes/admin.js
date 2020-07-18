@@ -61,20 +61,16 @@ router
   .put(async (req, res) => {
     const { scenceId } = req.params;
     const { tribulation, characters, equipments } = req.body;
-    console.log('tribulation', tribulation);
-    console.log('characters', characters);
-    console.log('equipments', equipments);
+    console.log('Update ', scenceId);
     let charactersEncoded = characters;
     let equipmentsEncoded = equipments;
     try {
       charactersEncoded = JSON.parse(characters);
       equipmentsEncoded = JSON.parse(equipments);
     } catch (err) {
-      console.log('parse fail', err);
+      // console.log('parse fail', err);
     }
     // charactersEncoded = JSON.parse(charactersEncoded);
-    console.log('charactersEncoded', charactersEncoded);
-    console.log('equipmentsEncoded', equipmentsEncoded);
     try {
       const updateResult = await adminService.updateScence({
         id: scenceId,
