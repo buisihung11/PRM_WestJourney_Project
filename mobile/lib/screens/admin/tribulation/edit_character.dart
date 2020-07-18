@@ -6,6 +6,7 @@ import 'package:mobile/repositories/actor.dart';
 import 'package:mobile/repositories/firebase.dart';
 import 'package:mobile/utils/index.dart';
 import 'package:mobile/widgets/image_network.dart';
+import 'package:mobile/widgets/input.dart';
 import 'package:smart_select/smart_select.dart';
 
 class EditCharacter extends StatefulWidget {
@@ -59,21 +60,14 @@ class _EditCharacterState extends State<EditCharacter> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(15),
-                child: TextFormField(
+                child: Input(
+                  label: "Name",
+                  isRequired: true,
                   onSaved: (val) {
                     updateCharactor.name = val;
                   },
                   initialValue: updateCharactor.name,
                   keyboardType: TextInputType.text,
-                  decoration: new InputDecoration(
-                    labelText: "Name",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                    ),
-                  ),
                 ),
               ),
               updateCharactor.descriptionFileURL == null

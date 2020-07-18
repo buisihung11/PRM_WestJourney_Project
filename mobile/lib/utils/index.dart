@@ -80,7 +80,7 @@ class CustomInterceptors extends InterceptorsWrapper {
 
 class MyRequest {
   static BaseOptions options = new BaseOptions(
-    baseUrl: SERVER_API,
+    baseUrl: DEV_SERVER_API,
     headers: {
       Headers.contentTypeHeader: "application/json",
     },

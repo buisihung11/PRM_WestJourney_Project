@@ -45,8 +45,14 @@ class Input extends StatelessWidget {
             minLines: minLines,
             maxLines: maxLines,
             obscureText: obscureText,
-            decoration: InputDecoration(
+            decoration: new InputDecoration(
               labelText: labelText,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 1.0),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue, width: 1.0),
+              ),
             ),
             onSaved: onSaved,
             validator: (String value) {

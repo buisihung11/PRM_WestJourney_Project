@@ -123,10 +123,14 @@ class _TribulationDetailState extends State<TribulationDetail> {
                           content: widget.tribulation.description),
                       Info(
                           label: "Start",
-                          content: widget.tribulation.filmingStartDate),
+                          content: formatDate(
+                            DateTime.parse(widget.tribulation.filmingStartDate),
+                          )),
                       Info(
                           label: "End",
-                          content: widget.tribulation.filmingEndDate),
+                          content: formatDate(
+                            DateTime.parse(widget.tribulation.filmingEndDate),
+                          )),
                       Info(
                         label: "Set Quantity",
                         content: widget.tribulation.setQuantity.toString(),

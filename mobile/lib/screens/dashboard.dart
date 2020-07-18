@@ -29,17 +29,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessagea: $message");
         _showItemDialog(message);
-        _handleNotification(message);
+        // _handleNotification(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         // _navigateToPhaseScore(message);
-        // TODO optional
+        _showItemDialog(message);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         // _navigateToPhaseScore(message);
-        // TODO optional
+        _showItemDialog(message);
       },
     );
   }
@@ -48,8 +48,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print('Showing Dialog');
     bool isConfirmToNavigate = await showDialog<bool>(
         context: context,
-        builder: (context) =>
-            _buildDialog(context, message['notification']['title']));
+        builder: (context) => _buildDialog(
+              context,
+              message['notification']['title'],
+              message['notification']['body'],
+            ));
     // if (isConfirmToNavigate) _navigateToPhaseScore(message);
   }
 
@@ -58,10 +61,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     print(data.toString());
   }
 
-  Widget _buildDialog(BuildContext context, String msg) {
+  Widget _buildDialog(BuildContext context, String msg, String content) {
     return AlertDialog(
       content: Text(
-        "Notification",
+        content,
         style: TextStyle(
           color: Colors.grey[400],
         ),
