@@ -12,10 +12,14 @@ Future<void> openLink(String link) async {
   }
 }
 
-String formatDateStringWithFormat({String d, String format = "yyyy-MM-dd"}) {
-  final DateFormat formatter = DateFormat(format);
-  final String formatted = formatter.format(DateFormat("dd-MM-yyyy").parse(d));
-  return formatted;
+String formatDateStringWithFormat({String d, String format = "dd-MM-yyyy"}) {
+  try {
+    final DateFormat formatter = DateFormat(format);
+    final String formatted = formatter.format(DateTime.parse(d));
+    return formatted;
+  } catch (e) {
+    return null;
+  }
 }
 
 String formatDate(DateTime d) {

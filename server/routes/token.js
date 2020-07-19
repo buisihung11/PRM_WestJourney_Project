@@ -14,6 +14,15 @@ router.post('/tokens', async (req, res) => {
   }
 });
 
+router.get('/logout', async (req, res) => {
+  try {
+    const result = await userService.logout();
+    return res.send({ success: true, result });
+  } catch (e) {
+    return res.status(500).send({ error: 'Something wrong' });
+  }
+});
+
 router.get('/actor-push', async (req, res) => {
   const { actorId } = req.user;
   try {
@@ -24,7 +33,6 @@ router.get('/actor-push', async (req, res) => {
     });
     return res.send({ result });
   } catch (err) {
-    console.log('err', err);
     return res.status(500).send({ error: err.message });
   }
 });
@@ -39,7 +47,6 @@ router.get('/testpush', async (req, res) => {
     });
     return res.send({ result });
   } catch (err) {
-    console.log('err', err);
     return res.status(500).send({ error: err.message });
   }
 });

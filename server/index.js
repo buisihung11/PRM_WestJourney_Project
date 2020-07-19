@@ -23,7 +23,7 @@ const isAuth = require('./middlewares/is-Auth');
 const isAuthor = require('./middlewares/is-Author');
 
 dotenv.config();
-const { PORT = 5000, REDIS_URL = 'redis://127.0.0.1:6379' } = process.env;
+const { PORT = 5000 } = process.env;
 
 const app = express();
 
@@ -46,7 +46,6 @@ app.get('/ping', (req, res) => res.send('Hello World'));
 app.use(authRoute);
 // Private routes
 app.use(isAuth);
-
 app.use('/me', tokenRoute);
 app.use('/me', userInfoRoute);
 app.use('/me', isAuthor('actor'), userRoute);
@@ -56,7 +55,6 @@ app.use(isAuthor('admin'), adminRoute);
 
 // Err handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 

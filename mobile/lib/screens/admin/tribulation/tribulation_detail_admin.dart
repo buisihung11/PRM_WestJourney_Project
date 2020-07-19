@@ -1,6 +1,8 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_holo_date_picker/date_picker.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/constrants.dart';
 import 'package:mobile/models/Actor.dart';
@@ -10,7 +12,10 @@ import 'package:mobile/models/Tribulation.dart';
 import 'package:mobile/repositories/tribulation.dart';
 import 'package:mobile/screens/admin/tribulation/edit_character.dart';
 import 'package:mobile/screens/admin/tribulation/edit_equipment.dart';
+import 'package:mobile/screens/admin/tribulation_screen.dart';
+import 'package:mobile/utils/dialog.dart';
 import 'package:mobile/utils/index.dart';
+import 'package:mobile/widgets/date_picker.dart';
 import 'package:mobile/widgets/image_network.dart';
 import 'package:mobile/widgets/input.dart';
 import 'package:mobile/widgets/text_error.dart';
@@ -45,7 +50,7 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
   void initState() {
     super.initState();
     pr = new ProgressDialog(context,
-        showLogs: true,
+        // showLogs: true,
         type: ProgressDialogType.Download,
         isDismissible: false);
     setState(() {
@@ -65,11 +70,11 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
   }
 
   _handleUpdate() async {
+    final isUpdate = widget.mode == EditMode.update;
     try {
       if (!_formKey.currentState.validate()) return;
       _formKey.currentState.save();
       Tribulation createdTribulation;
-      final isUpdate = widget.mode == EditMode.update;
       pr.style(
         message: "${isUpdate ? 'Updating' : 'Creating'} actor...",
         progressWidget: CircularProgressIndicator(),
@@ -95,16 +100,23 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
             tribulationInfo = createdTribulation;
           });
       }
+      print("Edit $success");
       if (success) {
+        await pr.hide();
         await _showMyDialog(
             content: "${isUpdate ? 'Updating' : 'Creating'} success",
             isError: false);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => TribulationAdminDetail(
-                  tribulation: tribulationInfo,
-                  role: widget.role,
-                  mode: EditMode.read,
-                )));
+        if (isUpdate) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => TribulationAdminDetail(
+                    tribulation: tribulationInfo,
+                    role: widget.role,
+                    mode: EditMode.read,
+                  )));
+        } else {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => TribulationScreen()));
+        }
       }
       print(success);
     } catch (e) {
@@ -118,6 +130,51 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
         }
         await _showMyDialog(content: errorContent, isError: true);
       }
+    } finally {
+      await pr.hide();
+    }
+  }
+
+  _onDelete(int itemId, [BuildContext context]) async {
+    print("Delete $itemId");
+    if (!await deleteDialog(context)) return;
+    try {
+      pr.style(
+        message: "Deleting...",
+        // progressWidget: CircularProgressIndicator(),
+        elevation: 10.0,
+        insetAnimCurve: Curves.easeInOut,
+      );
+      await pr.show();
+      final success = await tribulationRepository.deleteTribulation(itemId);
+      if (success) {
+        // final snackBar = SnackBar(
+        //     backgroundColor: Colors.green,
+        //     content: Text(
+        //       "Delete success!",
+        //       style: TextStyle(
+        //         color: Colors.white,
+        //       ),
+        //     ));
+        // Scaffold.of(context).showSnackBar(snackBar);
+        await pr.hide();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => TribulationScreen()));
+      } else {
+        // final snackBar = SnackBar(
+        //     backgroundColor: Colors.red,
+        //     content: Text(
+        //       "Delete fail!",
+        //       style: TextStyle(
+        //         color: Colors.white,
+        //       ),
+        //     ));
+        // Scaffold.of(context).showSnackBar(snackBar);
+      }
+    } on DioError catch (e) {
+      setState(() {
+        err = e;
+      });
     } finally {
       await pr.hide();
     }
@@ -176,10 +233,10 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
                       value: "update",
                       child: Text('Update'),
                     ),
-                    // const PopupMenuItem<String>(
-                    //   value: "delete",
-                    //   child: Text('Delete'),
-                    // ),
+                    const PopupMenuItem<String>(
+                      value: "delete",
+                      child: Text('Delete'),
+                    ),
                   ],
                 )
               : IconButton(icon: Icon(Icons.done), onPressed: _handleUpdate)
@@ -235,38 +292,27 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
                                           int.parse(value);
                                     },
                                   ),
-                                  Input(
-                                    isRequired: true,
-                                    readOnly: readOnly,
+                                  MyDatePicker(
                                     label: "Start",
-                                    initialValue:
-                                        tribulationInfo.filmingStartDate != null
-                                            ? formatDate(
-                                                DateTime.parse(tribulationInfo
-                                                    .filmingStartDate),
-                                              )
-                                            : null,
-                                    onSaved: (value) {
-                                      tribulationInfo.filmingStartDate =
-                                          (value as String).trim();
+                                    disableChange: readOnly,
+                                    value: tribulationInfo.filmingStartDate,
+                                    initialDate:
+                                        tribulationInfo.filmingStartDate,
+                                    onChange: (datePicked) async {
+                                      setState(() =>
+                                          tribulationInfo.filmingStartDate =
+                                              datePicked.toString());
                                     },
                                   ),
-                                  Input(
-                                    readOnly: readOnly,
-                                    isRequired: true,
+                                  MyDatePicker(
                                     label: "End",
-                                    keyboardType: TextInputType.datetime,
-                                    initialValue: tribulationInfo
-                                                .filmingEndDate !=
-                                            null
-                                        ? formatDate(
-                                            DateTime.parse(
-                                                tribulationInfo.filmingEndDate),
-                                          )
-                                        : null,
-                                    onSaved: (value) {
-                                      tribulationInfo.filmingEndDate =
-                                          (value as String).trim();
+                                    disableChange: readOnly,
+                                    value: tribulationInfo.filmingEndDate,
+                                    initialDate: tribulationInfo.filmingEndDate,
+                                    onChange: (datePicked) async {
+                                      setState(() =>
+                                          tribulationInfo.filmingEndDate =
+                                              datePicked.toString());
                                     },
                                   ),
                                   Input(
@@ -463,6 +509,7 @@ class _TribulationAdminDetailState extends State<TribulationAdminDetail> {
         );
         break;
       case 'delete':
+        _onDelete(tribulationInfo.id, context);
         break;
       default:
         break;

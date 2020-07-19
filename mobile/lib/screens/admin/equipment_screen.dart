@@ -132,17 +132,17 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                   "Equipment List",
                   style: textHeaderStyle,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Info(label: "From", content: fromDate),
-                      Info(label: "To", content: toDate),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: MediaQuery.of(context).size.width,
+                //   height: 50,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //     children: <Widget>[
+                //       Info(label: "From", content: fromDate),
+                //       Info(label: "To", content: toDate),
+                //     ],
+                //   ),
+                // ),
 
                 // FILTERS
                 Container(
@@ -177,34 +177,34 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                           ),
                         ),
                         SizedBox(width: 10),
-                        Expanded(
-                          child: RaisedButton(
-                            color: Colors.blue,
-                            onPressed: () async {
-                              final List<DateTime> picked =
-                                  await DateRagePicker.showDatePicker(
-                                context: context,
-                                initialFirstDate: new DateTime.now(),
-                                initialLastDate: (new DateTime.now()),
-                                firstDate: new DateTime(2015),
-                                lastDate: new DateTime(2021),
-                              );
-                              if (picked != null && picked.length == 2) {
-                                setState(() {
-                                  fromDate = formatDate(picked[0]);
-                                  toDate = formatDate(picked[1]);
-                                });
-                              }
-                            },
-                            child: Text(
-                              "Pick date range",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                        )
+                        // Expanded(
+                        //   child: RaisedButton(
+                        //     color: Colors.blue,
+                        //     onPressed: () async {
+                        //       final List<DateTime> picked =
+                        //           await DateRagePicker.showDatePicker(
+                        //         context: context,
+                        //         initialFirstDate: new DateTime.now(),
+                        //         initialLastDate: (new DateTime.now()),
+                        //         firstDate: new DateTime(2015),
+                        //         lastDate: new DateTime(2021),
+                        //       );
+                        //       if (picked != null && picked.length == 2) {
+                        //         setState(() {
+                        //           fromDate = formatDate(picked[0]);
+                        //           toDate = formatDate(picked[1]);
+                        //         });
+                        //       }
+                        //     },
+                        //     child: Text(
+                        //       "Pick date range",
+                        //       style: TextStyle(
+                        //         color: Colors.white,
+                        //         fontSize: 15,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ),

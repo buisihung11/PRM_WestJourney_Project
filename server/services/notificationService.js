@@ -39,7 +39,7 @@ class NotificationService {
       console.log('gui thong bao user', userModel.get({ plain: true }));
       const userObj = userModel.get({ plain: true });
       const tokens = userObj.Tokens;
-      if (tokens.length != 0) {
+      if (tokens.length !== 0) {
         const registrationTokens = tokens.map((token) => token.token);
         console.log('registrationTokens', registrationTokens);
         const message = {
@@ -78,7 +78,7 @@ class NotificationService {
         },
       });
       console.log('tokens', userId, tokens);
-      if (tokens.length != 0) {
+      if (tokens.length !== 0) {
         const registrationTokens = tokens.map((token) => token.token);
         console.log('registrationTokens', registrationTokens);
         const message = {

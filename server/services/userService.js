@@ -11,22 +11,25 @@ class UserService {
     this.user = user;
   }
 
+  async logout() {
+    const { userId } = this.user;
+    const result = await Token.destroy({
+      where: { UserId: userId },
+    });
+    return result;
+  }
+
   async saveTokens(fcmToken) {
     const { userId } = this.user;
-    console.log('Save Token', userId);
     const result = await Token.findOrCreate({
       where: { token: fcmToken, UserId: userId },
     });
-    console.log('result', result[0]);
     return result[0];
   }
 
   async getScenes(filter) {
-    console.log('this.user', this.user);
-    console.log('filter', filter);
-    console.log(new Date().toISOString());
     const { actorId } = this.user;
-    let where = {};
+    const where = {};
     switch (filter) {
       case 'done':
         where.filmingEndDate = {
@@ -124,7 +127,6 @@ class UserService {
     });
     if (!scenceDetail) throw Error('Not found that tribulation');
     const result = scenceDetail.get({ plain: true }).Characters;
-    console.log('result', result);
     return result;
   }
 

@@ -181,7 +181,6 @@ module.exports = {
 const notificationService = require('../services/notificationService');
 const notificationQueue = require('../queues/notificationQueue');
 
-console.log('notificationService', notificationService);
 const afterCreateCharactor = async (actorCharactor) => {
   const actorId = actorCharactor.get({ plain: true }).ActorId;
   const characterId = actorCharactor.get({ plain: true }).CharacterId;

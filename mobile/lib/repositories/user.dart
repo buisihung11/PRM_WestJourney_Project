@@ -77,6 +77,12 @@ class UserRepository {
 
   Future<bool> logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.clear();
+    await preferences.clear();
+    final res = await request.get("/me/logout");
+    if (res.data["success"] && res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception(res.data["error"] ?? "Error when logout");
+    }
   }
 }

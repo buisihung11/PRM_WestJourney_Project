@@ -32,8 +32,8 @@ class Tribulation {
         "name": name,
         "description": description,
         "filmingAddress": filmingAddress,
-        "filmingStartDate": formatDateStringWithFormat(d: filmingStartDate),
-        "filmingEndDate": formatDateStringWithFormat(d: filmingEndDate),
+        "filmingStartDate": filmingStartDate,
+        "filmingEndDate": filmingEndDate,
         "setQuantity": setQuantity,
       };
 

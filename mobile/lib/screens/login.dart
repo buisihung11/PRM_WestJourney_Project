@@ -143,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             validator: validateEmail,
                           ),
+                          SizedBox(height: 15),
                           Input(
                             label: "Password",
                             keyboardType: TextInputType.visiblePassword,
