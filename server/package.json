@@ -21,7 +21,7 @@
     "express": "^4.17.1",
     "firebase-admin": "^9.0.0",
     "helmet": "^3.23.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mssql": "^6.2.0",
     "redis": "^3.0.2",
