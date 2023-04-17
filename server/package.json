@@ -25,7 +25,7 @@
     "morgan": "^1.10.0",
     "mssql": "^6.2.0",
     "redis": "^3.0.2",
-    "sequelize": "^5.22.3",
+    "sequelize": "^6.29.0",
     "swagger-ui-express": "^4.1.4",
     "tedious": "^8.3.0"
   },
